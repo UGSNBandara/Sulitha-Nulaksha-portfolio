@@ -421,13 +421,13 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-4 md:px-8">
+      <section id="contact" className="py-20 px-4 md:px-8 min-h-screen md:min-h-0">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true }}
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
@@ -440,7 +440,7 @@ export default function Home() {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true }}
               className="space-y-8"
             >
               <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
@@ -517,7 +517,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true }}
               className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg"
             >
               <h3 className="text-2xl font-bold mb-6">Send me a Message</h3>
