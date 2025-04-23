@@ -32,9 +32,10 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
 import { IconType } from 'react-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { getFeaturedProjects, getProjectImage } from '@/data/projects';
 import { getFeaturedExperiences } from '@/data/experience';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 // Define skills array
 const skills = [
@@ -111,6 +112,12 @@ const swiperStyles = `
 `;
 
 export default function Home() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
     if (contactSection) {
@@ -287,7 +294,7 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="min-h-screen flex items-center justify-center section-padding py-20 px-4 md:px-8">
+      <section id="projects" className="min-h-screen flex items-center justify-center section-padding py-20 px-4 md:px-8 bg-gray-50/50 dark:bg-dark">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -319,40 +326,50 @@ export default function Home() {
             {featuredProjects.map((project, index) => (
               <SwiperSlide key={index}>
                 <motion.div>
-                  <div className="relative h-48 overflow-hidden rounded-t-lg">
-                    <Image
-                      src={project.image || "/projects/default-project.jpg"}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      onError={(e) => {
-                        if (!e.currentTarget.src.includes('default-project.jpg')) {
-                          console.error(`Failed to load image: ${project.image}`);
-                          e.currentTarget.src = "/projects/default-project.jpg";
-                        }
-                      }}
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient.from} ${project.gradient.to} opacity-20`} />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold">{project.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.map((tag, tagIndex) => (
-                        <span 
-                          key={tagIndex}
-                          className="px-2 py-1 bg-gray-100 dark:bg-dark-light rounded-full text-sm"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                  <div 
+                    className={`bg-white dark:bg-dark-light
+                      p-6 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 
+                      border-2 border-opacity-20 ${project.gradient.from.replace('from-', 'border-')}`}
+                  >
+                    <div className="relative h-48 overflow-hidden rounded-t-lg">
+                      <Image
+                        src={project.image || "/projects/default-project.svg"}
+                        alt={project.title}
+                        fill
+                        className="object-cover"
+                        onError={(e) => {
+                          if (!e.currentTarget.src.includes('default-project.svg')) {
+                            console.error(`Failed to load image: ${project.image}`);
+                            e.currentTarget.src = "/projects/default-project.svg";
+                          }
+                        }}
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                        <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                      </div>
                     </div>
-                    <Link 
-                      href={project.link}
-                      className="inline-flex items-center text-primary hover:text-primary/80 transition-colors"
-                    >
-                      Learn more →
-                    </Link>
+                    <div className="p-4">
+                      <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tags.map((tag, tagIndex) => (
+                          <span 
+                            key={tagIndex}
+                            className={`px-3 py-1 text-sm rounded-full bg-opacity-10 border border-opacity-20
+                              ${project.gradient.from.replace('from-', 'bg-')}
+                              ${project.gradient.from.replace('from-', 'border-')}
+                              ${project.gradient.from.replace('from-', 'text-')}`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                      <Link 
+                        href={project.link}
+                        className={`inline-flex items-center ${project.gradient.from.replace('from-', 'text-')} hover:opacity-80 transition-colors`}
+                      >
+                        Learn more →
+                      </Link>
+                    </div>
                   </div>
                 </motion.div>
               </SwiperSlide>
@@ -374,7 +391,7 @@ export default function Home() {
       </section>
 
       {/* Experience Section */}
-      <section id="experience" className="min-h-screen flex items-center justify-center section-padding py-20 px-4 md:px-8">
+      <section id="experience" className="min-h-screen flex items-center justify-center section-padding py-20 px-4 md:px-8 bg-white dark:bg-dark">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -411,12 +428,28 @@ export default function Home() {
                   <div className={`w-full md:w-5/12 pl-12 md:pl-8 ${
                     index % 2 === 0 ? 'md:pr-8' : 'md:pl-8'
                   }`}>
-                    <div className="bg-white dark:bg-dark-light p-6 rounded-xl shadow-lg overflow-hidden">
-                      <div className={`h-32 relative mb-4 rounded-t-xl bg-gradient-to-r ${item.gradient.from} ${item.gradient.to}`}>
-                        <div className="absolute inset-0 bg-black/20" />
-                        <div className="absolute bottom-4 left-4 text-white">
-                          <div className="text-sm font-semibold">{item.year}</div>
-                          <h3 className="text-xl font-bold">{item.title}</h3>
+                    <div 
+                      className={`bg-gradient-to-br from-white to-${item.gradient.from.replace('from-', '')}/5
+                        dark:from-dark-light dark:to-${item.gradient.from.replace('from-', '')}/10
+                        p-6 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 
+                        border-2 border-opacity-20 ${item.gradient.from.replace('from-', 'border-')}`}
+                    >
+                      <div className="relative h-48 mb-4 rounded-t-lg overflow-hidden">
+                        <Image
+                          src={item.image || "/experiences/default-experience.svg"}
+                          alt={`${item.organization} - ${item.title}`}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            if (!e.currentTarget.src.includes('default-experience.svg')) {
+                              console.error(`Failed to load image: ${item.image}`);
+                              e.currentTarget.src = "/experiences/default-experience.svg";
+                            }
+                          }}
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                          <div className="text-sm font-semibold text-white">{item.year}</div>
+                          <h3 className="text-xl font-bold text-white">{item.title}</h3>
                         </div>
                       </div>
                       <div className="text-gray-600 dark:text-gray-300 mb-2">{item.organization}</div>
@@ -443,7 +476,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-4 md:px-8 min-h-screen md:min-h-0">
+      <section id="contact" className="py-20 px-4 md:px-8 min-h-screen md:min-h-0 bg-gray-50/50 dark:bg-dark">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -549,11 +582,27 @@ export default function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg"
+              className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg relative"
             >
               <h3 className="text-2xl font-bold mb-6">Send me a Message</h3>
+              {notification.type && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mb-6 p-4 rounded-lg ${
+                    notification.type === 'success' 
+                      ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' 
+                      : 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                  }`}
+                >
+                  {notification.message}
+                </motion.div>
+              )}
               <form onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
                 event.preventDefault();
+                setIsSubmitting(true);
+                setNotification({ type: null, message: '' });
+                
                 const form = event.currentTarget;
                 const formData = new FormData(form);
                 formData.append("access_key", "39e56425-856b-405f-9a59-5e1397e50cb0");
@@ -567,15 +616,25 @@ export default function Home() {
                   const data = await response.json();
 
                   if (data.success) {
-                    alert("Form Submitted Successfully");
+                    setNotification({
+                      type: 'success',
+                      message: 'Thank you for your message! I will get back to you soon.'
+                    });
                     form.reset();
                   } else {
-                    console.log("Error", data);
-                    alert(data.message);
+                    setNotification({
+                      type: 'error',
+                      message: data.message || 'Something went wrong. Please try again.'
+                    });
                   }
                 } catch (error) {
                   console.error("Error submitting form:", error);
-                  alert("An error occurred while submitting the form");
+                  setNotification({
+                    type: 'error',
+                    message: 'An error occurred while sending your message. Please try again.'
+                  });
+                } finally {
+                  setIsSubmitting(false);
                 }
               }} className="space-y-6">
                 <div>
@@ -587,7 +646,8 @@ export default function Home() {
                     id="name"
                     name="name"
                     required
-                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    disabled={isSubmitting}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
                     placeholder="Your name"
                   />
                 </div>
@@ -600,7 +660,8 @@ export default function Home() {
                     id="email"
                     name="email"
                     required
-                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    disabled={isSubmitting}
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -612,18 +673,27 @@ export default function Home() {
                     id="message"
                     name="message"
                     required
+                    disabled={isSubmitting}
                     rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
                     placeholder="Your message"
                   ></textarea>
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                  whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
                   type="submit"
-                  className="w-full bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
                 >
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <LoadingSpinner />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Message'
+                  )}
                 </motion.button>
               </form>
             </motion.div>

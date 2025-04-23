@@ -9,7 +9,7 @@ export default function Projects() {
   const projects = getAllProjects();
 
   return (
-    <main className="min-h-screen bg-white dark:bg-dark py-20">
+    <main className="min-h-screen bg-gray-50/50 dark:bg-dark py-20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -28,44 +28,51 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white dark:bg-dark-light rounded-xl shadow-lg overflow-hidden"
             >
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={project.image || "/projects/default-project.svg"}
-                  alt={project.title}
-                  fill
-                  className="object-cover"
-                  onError={(e) => {
-                    if (!e.currentTarget.src.includes('default-project.svg')) {
-                      console.error(`Failed to load image: ${project.image}`);
-                      e.currentTarget.src = "/projects/default-project.svg";
-                    }
-                  }}
-                />
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient.from} ${project.gradient.to} opacity-20`} />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.map((tag, tagIndex) => (
-                    <span 
-                      key={tagIndex}
-                      className="px-3 py-1 bg-gray-100 dark:bg-dark rounded-full text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+              <div 
+                className={`bg-white dark:bg-dark-light
+                  p-6 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 
+                  border-2 border-opacity-20 ${project.gradient.from.replace('from-', 'border-')}`}
+              >
+                <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <Image
+                    src={project.image || "/projects/default-project.svg"}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    onError={(e) => {
+                      if (!e.currentTarget.src.includes('default-project.svg')) {
+                        console.error(`Failed to load image: ${project.image}`);
+                        e.currentTarget.src = "/projects/default-project.svg";
+                      }
+                    }}
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                  </div>
                 </div>
-                <Link 
-                  href={project.link}
-                  className="inline-block text-primary hover:text-primary/80 transition-colors"
-                >
-                  Learn more →
-                </Link>
+                <div className="p-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag, tagIndex) => (
+                      <span 
+                        key={tagIndex}
+                        className={`px-3 py-1 text-sm rounded-full bg-opacity-10 border border-opacity-20
+                          ${project.gradient.from.replace('from-', 'bg-')}
+                          ${project.gradient.from.replace('from-', 'border-')}
+                          ${project.gradient.from.replace('from-', 'text-')}`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <Link 
+                    href={project.link}
+                    className={`inline-flex items-center ${project.gradient.from.replace('from-', 'text-')} hover:opacity-80 transition-colors`}
+                  >
+                    Learn more →
+                  </Link>
+                </div>
               </div>
             </motion.div>
           ))}
