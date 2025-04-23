@@ -33,8 +33,8 @@ import 'swiper/css/pagination';
 import Link from 'next/link';
 import { IconType } from 'react-icons';
 import React from 'react';
-import { projects, getProjectImage } from '@/data/projects';
-import { experiences } from '@/data/experience';
+import { getFeaturedProjects, getProjectImage } from '@/data/projects';
+import { getFeaturedExperiences } from '@/data/experience';
 
 // Define skills array
 const skills = [
@@ -123,6 +123,9 @@ export default function Home() {
     window.open('/path-to-your-cv.pdf', '_blank');
   };
 
+  const featuredProjects = getFeaturedProjects();
+  const featuredExperiences = getFeaturedExperiences();
+
   return (
     <main className="relative bg-white dark:bg-dark">
       <style jsx global>{swiperStyles}</style>
@@ -183,8 +186,17 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="relative h-[300px] w-[300px] sm:h-[400px] sm:w-[400px] mx-auto"
           >
-            {/* Replace with your actual image */}
-            <div className="w-full h-full rounded-full bg-gradient-to-r from-primary to-purple-600 animate-gradient-x" />
+            <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-primary/20">
+              <Image
+                src="/images/profile.jpg"
+                alt="Sulitha Nulaksha"
+                width={400}
+                height={400}
+                className="w-full h-full object-cover"
+                priority
+              />
+            </div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-purple-600/20 animate-gradient-x" />
           </motion.div>
         </div>
       </section>
@@ -204,7 +216,7 @@ export default function Home() {
             {/* Description at the top */}
             <div className="bg-white dark:bg-dark-light p-4 md:p-8 rounded-xl shadow-lg mb-8">
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 text-left">
-                I'm Sulitha Nulaksha, a Computer Engineering Undergraduate passionate about leveraging technology to solve real-world challenges. My interests lie in machine learning and artificial intelligence, with a focus on Natural Language Processing (NLP) and networking applications, particularly Open RAN.
+                I'm Sulitha Nulaksha, a Computer Engineering Undergraduate passionate about leveraging technology to solve real-world challenges. My interests lie in machine learning and artificial intelligence, with a focus on Natural Language Processing (NLP).
               </p>
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 text-left mt-4">
                 With a growth mindset and a drive for continuous learning, I actively seek new opportunities to expand my skills and knowledge. Currently, I'm exploring Large Language Models (LLMs) and LangChain, combining curiosity with innovation to create impactful solutions.
@@ -304,16 +316,26 @@ export default function Home() {
             }}
             className="mb-12 px-12"
           >
-            {projects.map((project, index) => (
+            {featuredProjects.map((project, index) => (
               <SwiperSlide key={index}>
                 <motion.div>
-                  <div className={`h-48 relative bg-gradient-to-r ${project.gradient.from} ${project.gradient.to}`}>
-                    <div className="absolute inset-0 bg-black/20" />
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <h3 className="text-xl font-bold">{project.title}</h3>
-                    </div>
+                  <div className="relative h-48 overflow-hidden rounded-t-lg">
+                    <Image
+                      src={project.image || "/projects/default-project.jpg"}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        if (!e.currentTarget.src.includes('default-project.jpg')) {
+                          console.error(`Failed to load image: ${project.image}`);
+                          e.currentTarget.src = "/projects/default-project.jpg";
+                        }
+                      }}
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient.from} ${project.gradient.to} opacity-20`} />
                   </div>
                   <div className="p-6">
+                    <h3 className="text-xl font-bold">{project.title}</h3>
                     <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       {project.tags.map((tag, tagIndex) => (
@@ -338,7 +360,7 @@ export default function Home() {
           </Swiper>
 
           <div className="text-center mt-12">
-            <Link href="/projects" target="_blank" rel="noopener noreferrer">
+            <Link href="/projects">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -361,8 +383,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">Experience</h2>
-            <p className="text-gray-600 dark:text-gray-300">My journey and achievements</p>
+            <h2 className="text-3xl font-bold mb-4">Featured Experience</h2>
+            <p className="text-gray-600 dark:text-gray-300">Key milestones in my journey</p>
           </motion.div>
 
           <div className="relative">
@@ -371,7 +393,7 @@ export default function Home() {
 
             {/* Timeline items */}
             <div className="space-y-12">
-              {experiences.map((item, index) => (
+              {featuredExperiences.map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -50 }}
@@ -407,7 +429,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/experience" target="_blank" rel="noopener noreferrer">
+            <Link href="/experience">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -448,29 +470,38 @@ export default function Home() {
                 <div className="space-y-6">
                   <motion.a
                     whileHover={{ scale: 1.05 }}
-                    href="mailto:your.email@example.com"
+                    href="mailto:sulithanb119@gmail.com"
                     className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
                   >
-                    <MdEmail className="w-6 h-6 text-primary" />
-                    <span>your.email@example.com</span>
+                    <MdEmail className="w-6 h-6 text-red-500" />
+                    <span>sulithanb119@gmail.com</span>
                   </motion.a>
 
                   <motion.a
                     whileHover={{ scale: 1.05 }}
-                    href="https://wa.me/your-whatsapp-number"
+                    href="mailto:eg244962@engug.ruh.ac.lk"
+                    className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                  >
+                    <MdEmail className="w-6 h-6 text-red-500" />
+                    <span>eg244962@engug.ruh.ac.lk</span>
+                  </motion.a>
+
+                  <motion.a
+                    whileHover={{ scale: 1.05 }}
+                    href="https://wa.me/94714262972"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
                   >
-                    <SiWhatsapp className="w-6 h-6 text-primary" />
-                    <span>+94 XX XXX XXXX</span>
+                    <SiWhatsapp className="w-6 h-6 text-green-500" />
+                    <span>+94 71 426 2972</span>
                   </motion.a>
 
                   <motion.div
                     className="flex items-center gap-4 text-gray-600 dark:text-gray-300"
                   >
-                    <MdLocationOn className="w-6 h-6 text-primary" />
-                    <span>Your Address Here</span>
+                    <MdLocationOn className="w-6 h-6 text-blue-500" />
+                    <span>102/338, Lightroad/ Chnabay (31050), Trincomalee</span>
                   </motion.div>
                 </div>
               </div>
@@ -481,30 +512,30 @@ export default function Home() {
                   <motion.a
                     whileHover={{ scale: 1.1, rotate: 360 }}
                     transition={{ duration: 0.5 }}
-                    href="https://linkedin.com/in/your-profile"
+                    href="https://www.linkedin.com/in/nulaksha-bandara/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                    className="w-12 h-12 bg-[#0077B5]/10 rounded-full flex items-center justify-center text-[#0077B5] hover:bg-[#0077B5] hover:text-white transition-colors"
                   >
                     <SiLinkedin className="w-6 h-6" />
                   </motion.a>
                   <motion.a
                     whileHover={{ scale: 1.1, rotate: 360 }}
                     transition={{ duration: 0.5 }}
-                    href="https://instagram.com/your-profile"
+                    href="https://www.instagram.com/snulaksha__b?igsh=aWxmNnh3anFnN2Rp"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                    className="w-12 h-12 bg-[#E4405F]/10 rounded-full flex items-center justify-center text-[#E4405F] hover:bg-[#E4405F] hover:text-white transition-colors"
                   >
                     <SiInstagram className="w-6 h-6" />
                   </motion.a>
                   <motion.a
                     whileHover={{ scale: 1.1, rotate: 360 }}
                     transition={{ duration: 0.5 }}
-                    href="https://facebook.com/your-profile"
+                    href="https://www.facebook.com/profile.php?id=100075545900124"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
+                    className="w-12 h-12 bg-[#1877F2]/10 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors"
                   >
                     <SiFacebook className="w-6 h-6" />
                   </motion.a>
@@ -521,7 +552,32 @@ export default function Home() {
               className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg"
             >
               <h3 className="text-2xl font-bold mb-6">Send me a Message</h3>
-              <form className="space-y-6">
+              <form onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
+                event.preventDefault();
+                const form = event.currentTarget;
+                const formData = new FormData(form);
+                formData.append("access_key", "39e56425-856b-405f-9a59-5e1397e50cb0");
+
+                try {
+                  const response = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    body: formData
+                  });
+
+                  const data = await response.json();
+
+                  if (data.success) {
+                    alert("Form Submitted Successfully");
+                    form.reset();
+                  } else {
+                    console.log("Error", data);
+                    alert(data.message);
+                  }
+                } catch (error) {
+                  console.error("Error submitting form:", error);
+                  alert("An error occurred while submitting the form");
+                }
+              }} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Name
@@ -529,6 +585,8 @@ export default function Home() {
                   <input
                     type="text"
                     id="name"
+                    name="name"
+                    required
                     className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     placeholder="Your name"
                   />
@@ -540,6 +598,8 @@ export default function Home() {
                   <input
                     type="email"
                     id="email"
+                    name="email"
+                    required
                     className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     placeholder="your.email@example.com"
                   />
@@ -550,6 +610,8 @@ export default function Home() {
                   </label>
                   <textarea
                     id="message"
+                    name="message"
+                    required
                     rows={4}
                     className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     placeholder="Your message"

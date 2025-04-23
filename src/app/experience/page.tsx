@@ -2,46 +2,10 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { getAllExperiences } from '@/data/experience';
 
 export default function Experience() {
-  const experiences = [
-    {
-      year: "2024",
-      title: "Lead Organizer",
-      organization: "HaXtreme 3.0 Hackathon",
-      description: "Led the organization of a major hackathon event, coordinating teams and resources."
-    },
-    {
-      year: "2023",
-      title: "Volunteer",
-      organization: "Zero Plastic Initiative",
-      description: "Contributed to environmental sustainability efforts through community engagement."
-    },
-    {
-      year: "2023",
-      title: "Participant",
-      organization: "IEEEXtreme Coding Competition",
-      description: "Competed in the prestigious IEEE coding competition, showcasing technical skills."
-    },
-    {
-      year: "2022",
-      title: "Team Lead",
-      organization: "University Tech Club",
-      description: "Led a team of students in developing innovative tech solutions for campus challenges."
-    },
-    {
-      year: "2022",
-      title: "Mentor",
-      organization: "Code for Good",
-      description: "Mentored junior students in programming and software development fundamentals."
-    },
-    {
-      year: "2021",
-      title: "Student Ambassador",
-      organization: "Tech Education Initiative",
-      description: "Promoted technology education and coding literacy among high school students."
-    }
-  ];
+  const experiences = getAllExperiences();
 
   return (
     <main className="min-h-screen bg-white dark:bg-dark py-20">
@@ -80,14 +44,7 @@ export default function Experience() {
                   index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'
                 }`}>
                   <div className="bg-white dark:bg-dark-light p-6 rounded-xl shadow-lg overflow-hidden">
-                    <div className={`h-32 relative mb-4 rounded-t-xl ${
-                      index === 0 ? 'bg-gradient-to-r from-blue-500 to-purple-600' :
-                      index === 1 ? 'bg-gradient-to-r from-green-500 to-teal-600' :
-                      index === 2 ? 'bg-gradient-to-r from-orange-500 to-red-600' :
-                      index === 3 ? 'bg-gradient-to-r from-pink-500 to-purple-600' :
-                      index === 4 ? 'bg-gradient-to-r from-yellow-500 to-orange-600' :
-                      'bg-gradient-to-r from-indigo-500 to-purple-600'
-                    }`}>
+                    <div className={`h-32 relative mb-4 rounded-t-xl bg-gradient-to-r ${item.gradient.from} ${item.gradient.to}`}>
                       <div className="absolute inset-0 bg-black/20" />
                       <div className="absolute bottom-4 left-4 text-white">
                         <div className="text-sm font-semibold">{item.year}</div>
