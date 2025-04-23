@@ -32,7 +32,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
 import { IconType } from 'react-icons';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getFeaturedProjects, getProjectImage } from '@/data/projects';
 import { getFeaturedExperiences } from '@/data/experience';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -112,11 +112,23 @@ const swiperStyles = `
 `;
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState<{
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is the standard md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const scrollToContact = () => {
     const contactSection = document.getElementById('contact');
@@ -478,225 +490,416 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="py-20 px-4 md:px-8 min-h-screen md:min-h-0 bg-gray-50/50 dark:bg-dark">
         <div className="container mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
+          <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
             <p className="text-gray-600 dark:text-gray-300">Let's connect and create something amazing together</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Contact Information */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="space-y-8"
-            >
-              <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
-                <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-                <div className="space-y-6">
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    href="mailto:sulithanb119@gmail.com"
-                    className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
-                  >
-                    <MdEmail className="w-6 h-6 text-red-500" />
-                    <span>sulithanb119@gmail.com</span>
-                  </motion.a>
+            {isMobile ? (
+              <div className="space-y-8">
+                {/* Contact Info Content */}
+                <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
+                  <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
+                  <div className="space-y-6">
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="mailto:sulithanb119@gmail.com"
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                    >
+                      <MdEmail className="w-6 h-6 text-red-500" />
+                      <span>sulithanb119@gmail.com</span>
+                    </motion.a>
 
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    href="mailto:eg244962@engug.ruh.ac.lk"
-                    className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
-                  >
-                    <MdEmail className="w-6 h-6 text-red-500" />
-                    <span>eg244962@engug.ruh.ac.lk</span>
-                  </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="mailto:eg244962@engug.ruh.ac.lk"
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                    >
+                      <MdEmail className="w-6 h-6 text-red-500" />
+                      <span>eg244962@engug.ruh.ac.lk</span>
+                    </motion.a>
 
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    href="https://wa.me/94714262972"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
-                  >
-                    <SiWhatsapp className="w-6 h-6 text-green-500" />
-                    <span>+94 71 426 2972</span>
-                  </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="https://wa.me/94714262972"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                    >
+                      <SiWhatsapp className="w-6 h-6 text-green-500" />
+                      <span>+94 71 426 2972</span>
+                    </motion.a>
 
-                  <motion.div
-                    className="flex items-center gap-4 text-gray-600 dark:text-gray-300"
-                  >
-                    <MdLocationOn className="w-6 h-6 text-blue-500" />
-                    <span>102/338, Lightroad/ Chnabay (31050), Trincomalee</span>
-                  </motion.div>
+                    <motion.div
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300"
+                    >
+                      <MdLocationOn className="w-6 h-6 text-blue-500" />
+                      <span>102/338, Lightroad/ Chnabay (31050), Trincomalee</span>
+                    </motion.div>
+                  </div>
+                </div>
+                <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
+                  <h3 className="text-2xl font-bold mb-6">Social Links</h3>
+                  <div className="flex gap-6">
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      href="https://www.linkedin.com/in/nulaksha-bandara/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#0077B5]/10 rounded-full flex items-center justify-center text-[#0077B5] hover:bg-[#0077B5] hover:text-white transition-colors"
+                    >
+                      <SiLinkedin className="w-6 h-6" />
+                    </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      href="https://www.instagram.com/snulaksha__b?igsh=aWxmNnh3anFnN2Rp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#E4405F]/10 rounded-full flex items-center justify-center text-[#E4405F] hover:bg-[#E4405F] hover:text-white transition-colors"
+                    >
+                      <SiInstagram className="w-6 h-6" />
+                    </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      href="https://www.facebook.com/profile.php?id=100075545900124"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#1877F2]/10 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors"
+                    >
+                      <SiFacebook className="w-6 h-6" />
+                    </motion.a>
+                  </div>
                 </div>
               </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="space-y-8"
+              >
+                <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
+                  <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
+                  <div className="space-y-6">
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="mailto:sulithanb119@gmail.com"
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                    >
+                      <MdEmail className="w-6 h-6 text-red-500" />
+                      <span>sulithanb119@gmail.com</span>
+                    </motion.a>
 
-              <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
-                <h3 className="text-2xl font-bold mb-6">Social Links</h3>
-                <div className="flex gap-6">
-                  <motion.a
-                    whileHover={{ scale: 1.1, rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    href="https://www.linkedin.com/in/nulaksha-bandara/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 bg-[#0077B5]/10 rounded-full flex items-center justify-center text-[#0077B5] hover:bg-[#0077B5] hover:text-white transition-colors"
-                  >
-                    <SiLinkedin className="w-6 h-6" />
-                  </motion.a>
-                  <motion.a
-                    whileHover={{ scale: 1.1, rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    href="https://www.instagram.com/snulaksha__b?igsh=aWxmNnh3anFnN2Rp"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 bg-[#E4405F]/10 rounded-full flex items-center justify-center text-[#E4405F] hover:bg-[#E4405F] hover:text-white transition-colors"
-                  >
-                    <SiInstagram className="w-6 h-6" />
-                  </motion.a>
-                  <motion.a
-                    whileHover={{ scale: 1.1, rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                    href="https://www.facebook.com/profile.php?id=100075545900124"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 bg-[#1877F2]/10 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors"
-                  >
-                    <SiFacebook className="w-6 h-6" />
-                  </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="mailto:eg244962@engug.ruh.ac.lk"
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                    >
+                      <MdEmail className="w-6 h-6 text-red-500" />
+                      <span>eg244962@engug.ruh.ac.lk</span>
+                    </motion.a>
+
+                    <motion.a
+                      whileHover={{ scale: 1.05 }}
+                      href="https://wa.me/94714262972"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+                    >
+                      <SiWhatsapp className="w-6 h-6 text-green-500" />
+                      <span>+94 71 426 2972</span>
+                    </motion.a>
+
+                    <motion.div
+                      className="flex items-center gap-4 text-gray-600 dark:text-gray-300"
+                    >
+                      <MdLocationOn className="w-6 h-6 text-blue-500" />
+                      <span>102/338, Lightroad/ Chnabay (31050), Trincomalee</span>
+                    </motion.div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+                <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg">
+                  <h3 className="text-2xl font-bold mb-6">Social Links</h3>
+                  <div className="flex gap-6">
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      href="https://www.linkedin.com/in/nulaksha-bandara/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#0077B5]/10 rounded-full flex items-center justify-center text-[#0077B5] hover:bg-[#0077B5] hover:text-white transition-colors"
+                    >
+                      <SiLinkedin className="w-6 h-6" />
+                    </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      href="https://www.instagram.com/snulaksha__b?igsh=aWxmNnh3anFnN2Rp"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#E4405F]/10 rounded-full flex items-center justify-center text-[#E4405F] hover:bg-[#E4405F] hover:text-white transition-colors"
+                    >
+                      <SiInstagram className="w-6 h-6" />
+                    </motion.a>
+                    <motion.a
+                      whileHover={{ scale: 1.1, rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      href="https://www.facebook.com/profile.php?id=100075545900124"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#1877F2]/10 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors"
+                    >
+                      <SiFacebook className="w-6 h-6" />
+                    </motion.a>
+                  </div>
+                </div>
+              </motion.div>
+            )}
 
             {/* Contact Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg relative"
-            >
-              <h3 className="text-2xl font-bold mb-6">Send me a Message</h3>
-              {notification.type && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`mb-6 p-4 rounded-lg ${
-                    notification.type === 'success' 
-                      ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' 
-                      : 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400'
-                  }`}
-                >
-                  {notification.message}
-                </motion.div>
-              )}
-              <form onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
-                event.preventDefault();
-                setIsSubmitting(true);
-                setNotification({ type: null, message: '' });
-                
-                const form = event.currentTarget;
-                const formData = new FormData(form);
-                formData.append("access_key", "39e56425-856b-405f-9a59-5e1397e50cb0");
+            {isMobile ? (
+              <div className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg relative">
+                <h3 className="text-2xl font-bold mb-6">Send me a Message</h3>
+                {notification.type && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`mb-6 p-4 rounded-lg ${
+                      notification.type === 'success' 
+                        ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' 
+                        : 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                    }`}
+                  >
+                    {notification.message}
+                  </motion.div>
+                )}
+                <form onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
+                  event.preventDefault();
+                  setIsSubmitting(true);
+                  setNotification({ type: null, message: '' });
+                  
+                  const form = event.currentTarget;
+                  const formData = new FormData(form);
+                  formData.append("access_key", "39e56425-856b-405f-9a59-5e1397e50cb0");
 
-                try {
-                  const response = await fetch("https://api.web3forms.com/submit", {
-                    method: "POST",
-                    body: formData
-                  });
-
-                  const data = await response.json();
-
-                  if (data.success) {
-                    setNotification({
-                      type: 'success',
-                      message: 'Thank you for your message! I will get back to you soon.'
+                  try {
+                    const response = await fetch("https://api.web3forms.com/submit", {
+                      method: "POST",
+                      body: formData
                     });
-                    form.reset();
-                  } else {
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                      setNotification({
+                        type: 'success',
+                        message: 'Thank you for your message! I will get back to you soon.'
+                      });
+                      form.reset();
+                    } else {
+                      setNotification({
+                        type: 'error',
+                        message: data.message || 'Something went wrong. Please try again.'
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Error submitting form:", error);
                     setNotification({
                       type: 'error',
-                      message: data.message || 'Something went wrong. Please try again.'
+                      message: 'An error occurred while sending your message. Please try again.'
                     });
+                  } finally {
+                    setIsSubmitting(false);
                   }
-                } catch (error) {
-                  console.error("Error submitting form:", error);
-                  setNotification({
-                    type: 'error',
-                    message: 'An error occurred while sending your message. Please try again.'
-                  });
-                } finally {
-                  setIsSubmitting(false);
-                }
-              }} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
+                }} className="space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      disabled={isSubmitting}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      disabled={isSubmitting}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      disabled={isSubmitting}
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                      placeholder="Your message"
+                    ></textarea>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                    whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+                    type="submit"
                     disabled={isSubmitting}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
+                    className="w-full bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <LoadingSpinner />
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
+                  </motion.button>
+                </form>
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="bg-white dark:bg-dark-light p-8 rounded-xl shadow-lg relative"
+              >
+                <h3 className="text-2xl font-bold mb-6">Send me a Message</h3>
+                {notification.type && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`mb-6 p-4 rounded-lg ${
+                      notification.type === 'success' 
+                        ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' 
+                        : 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                    }`}
+                  >
+                    {notification.message}
+                  </motion.div>
+                )}
+                <form onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
+                  event.preventDefault();
+                  setIsSubmitting(true);
+                  setNotification({ type: null, message: '' });
+                  
+                  const form = event.currentTarget;
+                  const formData = new FormData(form);
+                  formData.append("access_key", "39e56425-856b-405f-9a59-5e1397e50cb0");
+
+                  try {
+                    const response = await fetch("https://api.web3forms.com/submit", {
+                      method: "POST",
+                      body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                      setNotification({
+                        type: 'success',
+                        message: 'Thank you for your message! I will get back to you soon.'
+                      });
+                      form.reset();
+                    } else {
+                      setNotification({
+                        type: 'error',
+                        message: data.message || 'Something went wrong. Please try again.'
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Error submitting form:", error);
+                    setNotification({
+                      type: 'error',
+                      message: 'An error occurred while sending your message. Please try again.'
+                    });
+                  } finally {
+                    setIsSubmitting(false);
+                  }
+                }} className="space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      disabled={isSubmitting}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      disabled={isSubmitting}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      disabled={isSubmitting}
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                      placeholder="Your message"
+                    ></textarea>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                    whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+                    type="submit"
                     disabled={isSubmitting}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    disabled={isSubmitting}
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
-                    placeholder="Your message"
-                  ></textarea>
-                </div>
-                <motion.button
-                  whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
-                  whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <LoadingSpinner />
-                      Sending...
-                    </>
-                  ) : (
-                    'Send Message'
-                  )}
-                </motion.button>
-              </form>
-            </motion.div>
+                    className="w-full bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <LoadingSpinner />
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
+                  </motion.button>
+                </form>
+              </motion.div>
+            )}
           </div>
         </div>
       </section>
