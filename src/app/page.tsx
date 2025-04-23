@@ -134,12 +134,12 @@ export default function Home() {
   const featuredExperiences = getFeaturedExperiences();
 
   return (
-    <main className="relative bg-white dark:bg-dark">
+    <main className="relative bg-white dark:bg-dark min-h-screen w-full overflow-x-hidden">
       <style jsx global>{swiperStyles}</style>
       <Navbar />
       
       {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center justify-center section-padding pt-16 px-4 md:px-8">
+      <section id="home" className="min-h-screen w-full flex items-center justify-center section-padding pt-16 px-4 md:px-8">
         <div className="container mx-auto grid md:grid-cols-2 gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
