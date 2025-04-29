@@ -56,7 +56,7 @@ export const allExperiences: Experience[] = [
     title: "Team Lead",
     organization: "HaXtreme 3.0",
     description: "Led a Program team of HaXtreme 3.0, a hackathon event organized by the IEEE Student Branch of the University of Ruhuna.",
-    image: "/experiences/HaXtreme/cover.jpeg",
+    image: "/experiences/HaxTreme/cover.jpeg",
     gradient: {
       from: "from-pink-500",
       to: "to-purple-600"
