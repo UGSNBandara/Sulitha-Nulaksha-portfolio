@@ -21,7 +21,7 @@ export default function Experience() {
           <p className="text-gray-600 dark:text-gray-300">My complete journey and achievements</p>
         </motion.div>
 
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-6xl mx-auto">
           {/* Timeline line */}
           <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-primary/20"></div>
 
@@ -41,11 +41,11 @@ export default function Experience() {
                 <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full z-10"></div>
 
                 {/* Content */}
-                <div className={`w-5/12 ${
+                <div className={`w-full md:w-1/2 pl-12 md:pl-8 ${
                   index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'
                 }`}>
                   <div 
-                    className={`bg-white dark:from-dark-light dark:to-${item.gradient.from.replace('from-', '')}/10
+                    className={`bg-gradient-to-br from-white:to-${item.gradient.from.replace('from-', '')}/10
                       p-6 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 
                       border-2 border-opacity-20 ${item.gradient.from.replace('from-', 'border-')}`}
                   >

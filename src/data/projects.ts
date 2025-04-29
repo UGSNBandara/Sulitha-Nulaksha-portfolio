@@ -1,5 +1,6 @@
 import { IconType } from 'react-icons';
 
+
 export interface Project {
   title: string;
   description: string;
@@ -25,7 +26,7 @@ export const allProjects: Project[] = [
     tags: ["TensorFlow", "Deep Learning", "MERN Stack"],
     link: "/projects/Agree_Detect",
     gradient: {
-      from: "from-blue-500",
+      from: "from-orange-500",
       to: "to-purple-600"
     },
     featured: true
@@ -37,7 +38,7 @@ export const allProjects: Project[] = [
     tags: ["FastAPI", "NLP", "MERN", "WordEmbedding"],
     link: "/projects/Ano_Notes",
     gradient: {
-      from: "from-green-500",
+      from: "from-orange-500",
       to: "to-teal-600"
     },
     featured: true
@@ -65,17 +66,6 @@ export const allProjects: Project[] = [
       to: "to-purple-600"
     }
   },
-  {
-    title: "C++ Game Engine",
-    description: "2D game engine implementation using C++ and OpenGL",
-    image: DEFAULT_PROJECT_IMAGE,
-    tags: ["C++", "OpenGL", "Game Dev"],
-    link: "#",
-    gradient: {
-      from: "from-yellow-500",
-      to: "to-orange-600"
-    }
-  }
 ];
 
 // Get featured projects for main page
