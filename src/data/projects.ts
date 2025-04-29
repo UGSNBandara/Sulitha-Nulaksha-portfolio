@@ -23,7 +23,7 @@ export const allProjects: Project[] = [
     description: "A web app using a TensorFlow model to detect crop diseases and suggest fertilizers.",
     image: "/projects/Agree_detect/cover.jpg",
     tags: ["TensorFlow", "Deep Learning", "MERN Stack"],
-    link: "#",
+    link: "/projects/Agree_Detect",
     gradient: {
       from: "from-blue-500",
       to: "to-purple-600"
@@ -35,7 +35,7 @@ export const allProjects: Project[] = [
     description: "A web app for sharing anonymous notes, checked by AI to ensure they're kind and respectful",
     image: "/projects/Ano_Note/cover.png",
     tags: ["FastAPI", "NLP", "MERN", "WordEmbedding"],
-    link: "#",
+    link: "/projects/Ano_Notes",
     gradient: {
       from: "from-green-500",
       to: "to-teal-600"
@@ -43,9 +43,9 @@ export const allProjects: Project[] = [
     featured: true
   },
   {
-    title: "MERN E-commerce",
-    description: "Full-stack e-commerce platform with MongoDB, Express, React, and Node.js",
-    image: DEFAULT_PROJECT_IMAGE,
+    title: "To Doo Mobile App",
+    description: "Mobile app enabling users to add tasks, deadlines, view tasks prioritized, and track performance.",
+    image: "/projects/To_Doo/cover.png",
     tags: ["MERN", "MongoDB", "React"],
     link: "#",
     gradient: {
