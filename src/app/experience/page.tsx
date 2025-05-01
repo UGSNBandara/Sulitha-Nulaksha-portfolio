@@ -44,7 +44,7 @@ export default function Experience() {
                         <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-4 h-4 bg-primary rounded-full z-10"></div>
 
                         {/* Content - full width on mobile, half width on desktop */}
-                        <div className={`w-full md:w-5/12 pl-12 md:pl-8 ${
+                        <div className={`w-full md:w-1/2 pl-12 md:pl-8 ${
                             index % 2 === 0 ? 'md:pr-8' : 'md:pl-8'
                         }`}>
                           <div

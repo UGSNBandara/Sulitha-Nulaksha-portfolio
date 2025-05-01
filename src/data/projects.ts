@@ -48,7 +48,7 @@ export const allProjects: Project[] = [
     description: "Mobile app enabling users to add tasks, deadlines, view tasks prioritized, and track performance.",
     image: "/projects/To_Doo/cover.png",
     tags: ["MERN", "MongoDB", "React"],
-    link: "#",
+    link: "/projects/To_Doo",
     gradient: {
       from: "from-orange-500",
       to: "to-red-600"
