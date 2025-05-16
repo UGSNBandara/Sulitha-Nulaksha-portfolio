@@ -22,7 +22,7 @@ import {
   SiFacebook,
   SiGithub,
   SiCodeforces,
-  SiHuggingface
+  SiHuggingface,
 } from 'react-icons/si';
 import { MdEmail, MdLocationOn } from 'react-icons/md';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -37,19 +37,24 @@ import { getFeaturedProjects, getProjectImage } from '@/data/projects';
 import { getFeaturedExperiences } from '@/data/experience';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-// Define skills array
-const skills = [
+interface Skill {
+  name: string;
+  icon?: IconType;
+  image?: string;
+  color: string;
+}
+
+const skills: Skill[] = [
   { name: 'C', icon: SiC, color: '#A8B9CC' },
   { name: 'C++', icon: SiCplusplus, color: '#00599C' },
+  { name: 'C#', image: '/images/logo/CSharp.png', color: '#68217A' },
   { name: 'Python', icon: SiPython, color: '#3776AB' },
+  { name: 'FastAPI', image: '/images/logo/fastapi.svg', color: '#009688' },
   { name: 'ML', icon: SiScikitlearn, color: '#F7931E' },
   { name: 'DL', icon: SiTensorflow, color: '#FF6F00' },
   { name: 'NLP', icon: SiSpacy, color: '#09A3D5' },
-  { name: 'MongoDB', icon: SiMongodb, color: '#47A248' },
-  { name: 'Express', icon: SiExpress, color: '#000000' },
-  { name: 'React', icon: SiReact, color: '#61DAFB' },
-  { name: 'Node.js', icon: SiNodedotjs, color: '#339933' },
-  { name: 'Git', icon: SiGit, color: '#F05032' },
+  { name: 'LangChain', image: '/images/logo/langchain-color.png', color: '#412991' },
+  { name: 'MERN', image: '/images/logo/mern.png', color: '#61DAFB' },
 ];
 
 // Define technical profiles array
@@ -266,10 +271,20 @@ export default function Home() {
                           whileHover={{ rotate: 360 }}
                           transition={{ duration: 0.5 }}
                         >
-                          {React.createElement(skill.icon, {
-                            className: "w-8 h-8",
-                            style: { color: skill.color }
-                          })}
+                          {skill.image ? (
+                            <Image
+                              src={skill.image}
+                              alt={skill.name}
+                              width={32}
+                              height={32}
+                              className="w-8 h-8 object-contain"
+                            />
+                          ) : skill.icon ? (
+                            React.createElement(skill.icon, {
+                              className: "w-8 h-8",
+                              style: { color: skill.color }
+                            })
+                          ) : null}
                         </motion.div>
                         <h3 className="text-sm font-semibold text-center group-hover:text-primary dark:group-hover:text-primary transition-colors">
                           {skill.name}
