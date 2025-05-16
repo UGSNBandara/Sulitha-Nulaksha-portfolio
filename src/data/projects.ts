@@ -55,17 +55,6 @@ export const allProjects: Project[] = [
     },
     featured: true
   },
-  {
-    title: "ML Stock Predictor",
-    description: "Machine learning model for stock price prediction using scikit-learn",
-    image: DEFAULT_PROJECT_IMAGE,
-    tags: ["Python", "ML", "scikit-learn"],
-    link: "#",
-    gradient: {
-      from: "from-pink-500",
-      to: "to-purple-600"
-    }
-  },
 ];
 
 // Get featured projects for main page

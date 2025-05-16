@@ -75,17 +75,6 @@ export const allExperiences: Experience[] = [
     },
     featured: true
   },
-  {
-    year: "2021",
-    title: "Student Ambassador",
-    organization: "Tech Education Initiative",
-    description: "Promoted technology education and coding literacy among high school students.",
-    image: "/experiences/default-experience.svg",
-    gradient: {
-      from: "from-indigo-500",
-      to: "to-purple-600"
-    }
-  }
 ];
 
 // Get featured experiences for main page
