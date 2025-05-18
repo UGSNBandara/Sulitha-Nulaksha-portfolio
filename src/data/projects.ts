@@ -44,6 +44,18 @@ export const allProjects: Project[] = [
     featured: true
   },
   {
+    title: "QuickRef URL PDF referencer",
+    description: "A streamlined tool to quickly upload PDFs or URLs, process them, and query their content effortlessly.",
+    image: "/projects/QuickRef/cover.png",
+    tags: ["LangChain", "Streamlit", "Python", "NVIDIA"],
+    link: "/projects/QuickRef",
+    gradient: {
+      from: "from-orange-500",
+      to: "to-red-600"
+    },
+    featured: true
+  },
+  {
     title: "To Doo Mobile App",
     description: "Mobile app enabling users to add tasks, deadlines, view tasks prioritized, and track performance.",
     image: "/projects/To_Doo/cover.png",

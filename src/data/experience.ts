@@ -75,6 +75,18 @@ export const allExperiences: Experience[] = [
     },
     featured: true
   },
+  {
+    year: "2025",
+    title: "Finalists",
+    organization: "CodeJam by CSE department of UoM",
+    description: "Finalists at CodeX and CyberRush, part of CodeJam by the Department of Computer Science & Engineering, University of Moratuwa.",
+    image: "/experiences/CodeJam/cover.jpg",
+    gradient: {
+      from: "from-yellow-500",
+      to: "to-orange-600"
+    },
+    featured: true
+  },
 ];
 
 // Get featured experiences for main page
