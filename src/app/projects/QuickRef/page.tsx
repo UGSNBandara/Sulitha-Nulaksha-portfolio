@@ -10,10 +10,17 @@ import {
     SiGithub,
 } from 'react-icons/si';
 import React, { useEffect, useState } from "react";
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 export default function QuickRef() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [rating, setRating] = useState(0);
+    const [notification, setNotification] = useState<{
+        type: 'success' | 'error' | null;
+        message: string;
+    }>({ type: null, message: '' });
 
     // Handle client-side initialization
     useEffect(() => {
@@ -216,34 +223,162 @@ export default function QuickRef() {
                         </div>
                     </motion.div>
 
-                    
-                    {/* Future plans and Back to Home in one line */}
+                    {/* Feedback and Future Plans Grid */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.8 }}
+                        transition={{ duration: 0.5, delay: 0.7 }}
                         className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6"
                     >
-                        {/* Future Plans Box */}
+                        {/* Left Column - Future Plans with Back to Home */}
                         <div className="bg-white dark:bg-dark-light p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                             <h2 className="text-2xl font-semibold mb-4 flex items-center">
                                 <span className="mr-2">🚀</span> Future Plans
                             </h2>
-                            <div className="space-y-4">
+                            <div className="space-y-4 mb-6">
                                 <ul className="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-300">
                                     <li>📱 Mobile App Development: Creating a sleek, cross-platform mobile application for on-the-go document referencing</li>
                                 </ul>
                             </div>
+                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                                <Link
+                                    href="/"
+                                    className={`block w-full bg-gray-50 dark:bg-dark p-4 rounded-lg hover:shadow-md transition-all flex items-center justify-center gap-2 group ${currentProject.gradient.from.replace('from-', 'text-')} hover:opacity-80`}
+                                >
+                                    <span className="transform group-hover:-translate-x-1 transition-transform">←</span>
+                                    <span className="text-lg font-semibold">Back to Home</span>
+                                </Link>
+                            </div>
                         </div>
 
-                        {/* Back to Home Box */}
-                        <Link
-                            href="/"
-                            className={`bg-white dark:bg-dark-light p-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group ${currentProject.gradient.from.replace('from-', 'text-')} hover:opacity-80`}
-                        >
-                            <span className="transform group-hover:-translate-x-1 transition-transform">←</span>
-                            <span className="text-lg font-semibold">Back to Home</span>
-                        </Link>
+                        {/* Right Column - Feedback Form */}
+                        <div className="bg-white dark:bg-dark-light p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                            <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                                <span className="mr-2">💬</span> Project Feedback
+                            </h2>
+                            {notification.type && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className={`mb-6 p-4 rounded-lg ${
+                                        notification.type === 'success' 
+                                            ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' 
+                                            : 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                                    }`}
+                                >
+                                    {notification.message}
+                                </motion.div>
+                            )}
+                            <form onSubmit={async (event: React.FormEvent<HTMLFormElement>) => {
+                                event.preventDefault();
+                                setIsSubmitting(true);
+                                setNotification({ type: null, message: '' });
+                                
+                                const form = event.currentTarget;
+                                const formData = new FormData(form);
+                                formData.append("access_key", "39e56425-856b-405f-9a59-5e1397e50cb0");
+                                formData.append("project", "QuickRef URL PDF referencer");
+
+                                try {
+                                    const response = await fetch("https://api.web3forms.com/submit", {
+                                        method: "POST",
+                                        body: formData
+                                    });
+
+                                    const data = await response.json();
+
+                                    if (data.success) {
+                                        setNotification({
+                                            type: 'success',
+                                            message: 'Thank you for your feedback!'
+                                        });
+                                        form.reset();
+                                        setRating(0);
+                                    } else {
+                                        setNotification({
+                                            type: 'error',
+                                            message: data.message || 'Something went wrong. Please try again.'
+                                        });
+                                    }
+                                } catch (error) {
+                                    console.error("Error submitting form:", error);
+                                    setNotification({
+                                        type: 'error',
+                                        message: 'An error occurred while sending your feedback. Please try again.'
+                                    });
+                                } finally {
+                                    setIsSubmitting(false);
+                                }
+                            }} className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Rate this project (Required)
+                                    </label>
+                                    <div className="flex gap-2">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setRating(star)}
+                                                className={`text-2xl transition-colors ${
+                                                    rating >= star 
+                                                        ? 'text-yellow-400' 
+                                                        : 'text-gray-300 dark:text-gray-600'
+                                                }`}
+                                            >
+                                                ★
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <input type="hidden" name="rating" value={rating} required />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="contact" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Contact (Optional)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="contact"
+                                        name="contact"
+                                        disabled={isSubmitting}
+                                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                                        placeholder="Email or WhatsApp number"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="feedback" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Feedback (Optional)
+                                    </label>
+                                    <textarea
+                                        id="feedback"
+                                        name="feedback"
+                                        disabled={isSubmitting}
+                                        rows={3}
+                                        className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-dark border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors disabled:opacity-50"
+                                        placeholder="Share your thoughts, suggestions, or report any issues..."
+                                    ></textarea>
+                                </div>
+
+                                <motion.button
+                                    whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
+                                    whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+                                    type="submit"
+                                    disabled={isSubmitting || rating === 0}
+                                    className="w-full bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <LoadingSpinner />
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        'Submit Feedback'
+                                    )}
+                                </motion.button>
+                            </form>
+                        </div>
                     </motion.div>
                 </div>
             </div>
