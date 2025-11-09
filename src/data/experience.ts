@@ -17,6 +17,78 @@ const DEFAULT_EXPERIENCE_IMAGE = "/experiences/default-experience.svg";
 // All experiences data
 export const allExperiences: Experience[] = [
   {
+    year: "2025",
+    title: "2nd Place Sri Lanka, 56th Worldwide",
+    organization: "IEEEXtreme 19.0",
+    description: "Team SimpleCoders achieved 2nd place in Sri Lanka and 56th worldwide in IEEEXtreme 19.0, a prestigious global coding competition organized by IEEE.",
+    image: "/experiences/IEEE_Xtreme19.0/xtreme.jpeg",
+    gradient: {
+      from: "from-red-500",
+      to: "to-yellow-600"
+    },
+    featured: true
+  },
+  {
+    year: "2025",
+    title: "Technical Team Member",
+    organization: "HaXtreme 4.0",
+    description: "Part of the Technical Team for HaXtreme 4.0, contributing technical expertise to this hackathon event.",
+    image: "/experiences/HaXTreme4.0/haXtreme.jpeg",
+    gradient: {
+      from: "from-indigo-500",
+      to: "to-blue-600"
+    },
+    featured: false
+  },
+  {
+    year: "2025",
+    title: "Program Team Member",
+    organization: "EMINENCE 5.0 Organizing Committee",
+    description: "Served as a program team member for EMINENCE 5.0, contributing to the organization and execution of this prestigious event.",
+    image: "/experiences/Eminance/eminanceOc.jpeg",
+    gradient: {
+      from: "from-green-500",
+      to: "to-emerald-600"
+    },
+    featured: false
+  },
+  {
+    year: "2025",
+    title: "1st Runner-Up",
+    organization: "Code Night 2025",
+    description: "Team Simple Trex secured 1st Runner-Up at Code Night 2025, organized by the Department of Electrical and Information Engineering, University of Ruhuna, in collaboration with the Career Guidance Unit, and awarded by Certix.",
+    image: "/experiences/CodeNight/codenight.jpeg",
+    gradient: {
+      from: "from-blue-500",
+      to: "to-cyan-600"
+    },
+    featured: true
+  },
+  {
+    year: "2025",
+    title: "1st Runner-Up",
+    organization: "Red Cypher 2.0 CTF",
+    description: "Secured 1st Runner-Up position in the Red Cypher 2.0 CTF competition, a cybersecurity capture the flag challenge.",
+    image: "/experiences/RedChypher/Redcypher.jpeg",
+    gradient: {
+      from: "from-purple-500",
+      to: "to-pink-600"
+    },
+    featured: true
+  },
+  {
+    year: "2025",
+    title: "Finalists",
+    organization: "CodeJam by CSE department of UoM",
+    description: "Finalists at CodeX and CyberRush, part of CodeJam by the Department of Computer Science & Engineering, University of Moratuwa.",
+    image: "/experiences/CodeJam/cover.jpg",
+    gradient: {
+      from: "from-yellow-500",
+      to: "to-orange-600"
+    },
+    featured: false
+  },
+  {
     year: "2024",
     title: "Working Experience",
     organization: "Car Max",
@@ -38,7 +110,7 @@ export const allExperiences: Experience[] = [
       from: "from-green-500",
       to: "to-teal-600"
     },
-    featured: true
+    featured: false
   },
   {
     year: "2024",
@@ -49,7 +121,8 @@ export const allExperiences: Experience[] = [
     gradient: {
       from: "from-orange-500",
       to: "to-red-600"
-    }
+    },
+    featured: false
   },
   {
     year: "2024",
@@ -73,19 +146,7 @@ export const allExperiences: Experience[] = [
       from: "from-yellow-500",
       to: "to-orange-600"
     },
-    featured: true
-  },
-  {
-    year: "2025",
-    title: "Finalists",
-    organization: "CodeJam by CSE department of UoM",
-    description: "Finalists at CodeX and CyberRush, part of CodeJam by the Department of Computer Science & Engineering, University of Moratuwa.",
-    image: "/experiences/CodeJam/cover.jpg",
-    gradient: {
-      from: "from-yellow-500",
-      to: "to-orange-600"
-    },
-    featured: true
+    featured: false
   },
 ];
 

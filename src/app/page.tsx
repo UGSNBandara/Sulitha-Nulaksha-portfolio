@@ -21,8 +21,9 @@ import {
   SiInstagram,
   SiFacebook,
   SiGithub,
-  SiCodeforces,
   SiHuggingface,
+  SiUnity,
+  SiOpencv,
 } from 'react-icons/si';
 import { MdEmail, MdLocationOn } from 'react-icons/md';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -45,7 +46,7 @@ interface Skill {
 }
 
 const skills: Skill[] = [
-  { name: 'C', icon: SiC, color: '#A8B9CC' },
+  { name: 'Unity', icon: SiUnity, color: '#000000' },
   { name: 'C++', icon: SiCplusplus, color: '#00599C' },
   { name: 'C#', image: '/images/logo/CSharp.png', color: '#68217A' },
   { name: 'Python', icon: SiPython, color: '#3776AB' },
@@ -55,13 +56,15 @@ const skills: Skill[] = [
   { name: 'NLP', icon: SiSpacy, color: '#09A3D5' },
   { name: 'LangChain', image: '/images/logo/langchain-color.png', color: '#412991' },
   { name: 'MERN', image: '/images/logo/mern.png', color: '#61DAFB' },
+  { name: 'OpenCV', icon: SiOpencv, color: '#5C3EE8' },
+  { name: 'YOLO', image: '/images/logo/yolo.png', color: '#FF6F00' },
+  { name: 'AI Agents', image: '/images/logo/google adk.png', color: '#FF6F00' },
 ];
 
 // Define technical profiles array
 const technicalProfiles = [
-  { name: 'GitHub', icon: SiGithub, color: '#333333', url: 'https://github.com/your-username' },
-  { name: 'Codeforces', icon: SiCodeforces, color: '#1F8ACB', url: 'https://codeforces.com/profile/your-username' },
-  { name: 'Hugging Face', icon: SiHuggingface, color: '#FFD21E', url: 'https://huggingface.co/your-username' },
+  { name: 'GitHub', icon: SiGithub, color: '#333333', url: 'https://github.com/UGSNBandara' },
+  { name: 'Hugging Face', icon: SiHuggingface, color: '#FFD21E', url: 'https://huggingface.co/Sulitha' },
 ];
 
 // Add custom styles for Swiper navigation
@@ -220,7 +223,6 @@ export default function Home() {
                 priority
               />
             </div>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-purple-600/20 animate-gradient-x" />
           </motion.div>
         </div>
       </section>
@@ -240,10 +242,13 @@ export default function Home() {
             {/* Description at the top */}
             <div className="bg-white dark:bg-dark-light p-4 md:p-8 rounded-xl shadow-lg mb-8">
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 text-left">
-                I'm Sulitha Nulaksha, a Computer Engineering Undergraduate passionate about leveraging technology to solve real-world challenges. My interests lie in machine learning and artificial intelligence, with a focus on Natural Language Processing (NLP).
+                Hi, I'm Sulitha Nulaksha, a Computer Engineering undergraduate passionate about using Machine Learning, Computer Vision, and AI to solve real-world problems. I enjoy building practical AI solutions and interactive experiences, from real-time motion detection games to AI-powered applications that make an impact.
               </p>
               <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 text-left mt-4">
-                With a growth mindset and a drive for continuous learning, I actively seek new opportunities to expand my skills and knowledge. Currently, I'm exploring Large Language Models (LLMs) and LangChain, combining curiosity with innovation to create impactful solutions.
+                I have hands-on experience with Python, TensorFlow, OpenCV, YOLO, Unity, C#, and AI agents, and I'm constantly exploring deep learning frameworks, game mechanics, and innovative AI applications.
+              </p>
+              <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 text-left mt-4">
+                With a growth mindset and curiosity, I love learning new technologies, experimenting with ideas, and creating projects that combine creativity, technical skills, and real-world utility.
               </p>
             </div>
 
@@ -384,7 +389,7 @@ export default function Home() {
                             className={`px-3 py-1 text-sm rounded-full bg-opacity-10 border border-opacity-20
                               ${project.gradient.from.replace('from-', 'bg-')}
                               ${project.gradient.from.replace('from-', 'border-')}
-                              ${project.gradient.from.replace('from-', 'text-')}`}
+                              text-white`}
                           >
                             {tag}
                           </span>
@@ -392,7 +397,7 @@ export default function Home() {
                       </div>
                       <Link 
                         href={project.link}
-                        className={`inline-flex items-center ${project.gradient.from.replace('from-', 'text-')} hover:opacity-80 transition-colors`}
+                        className="inline-flex items-center bg-primary text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors"
                       >
                         Learn more →
                       </Link>
@@ -551,7 +556,7 @@ export default function Home() {
                       className="flex items-center gap-4 text-gray-600 dark:text-gray-300"
                     >
                       <MdLocationOn className="w-6 h-6 text-blue-500" />
-                      <span>102/338, Lightroad/ Chnabay (31050), Trincomalee</span>
+                      <span>Galle</span>
                     </motion.div>
                   </div>
                 </div>
@@ -635,7 +640,7 @@ export default function Home() {
                       className="flex items-center gap-4 text-gray-600 dark:text-gray-300"
                     >
                       <MdLocationOn className="w-6 h-6 text-blue-500" />
-                      <span>102/338, Lightroad/ Chnabay (31050), Trincomalee</span>
+                      <span>Galle</span>
                     </motion.div>
                   </div>
                 </div>

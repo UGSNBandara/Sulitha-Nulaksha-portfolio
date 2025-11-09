@@ -20,6 +20,30 @@ const DEFAULT_PROJECT_IMAGE = "/projects/default-project.svg";
 // All projects data
 export const allProjects: Project[] = [
   {
+    title: "Car Driving Game Controller Using YOLOv8 and OpenCV",
+    description: "Handcrafted gaming controller and AI with YOLOv8n + OpenCV for real-time control detection.",
+    image: "/projects/CarControler/carcontroller.png",
+    tags: ["YOLOv8", "OpenCV", "Roboflow", "Computer Vision"],
+    link: "/projects/Car_Controller",
+    gradient: {
+      from: "from-red-500",
+      to: "to-orange-600"
+    },
+    featured: true
+  },
+  {
+    title: "Subway Surfers Motion Controller",
+    description: "Play Subway Surfers with real-time body movements using OpenCV + MediaPipe",
+    image: "/projects/SubwaySufer/subwaysufer.png",
+    tags: ["Python", "OpenCV", "MediaPipe", "Real-Time CV"],
+    link: "/projects/Subway_Surfers",
+    gradient: {
+      from: "from-purple-500",
+      to: "to-teal-600"
+    },
+    featured: true
+  },
+  {
     title: "DL Agree Disease Detector",
     description: "A web app using a TensorFlow model to detect crop diseases and suggest fertilizers.",
     image: "/projects/Agree_detect/cover.jpg",
@@ -65,7 +89,7 @@ export const allProjects: Project[] = [
       from: "from-orange-500",
       to: "to-red-600"
     },
-    featured: true
+    featured: false
   },
 ];
 
