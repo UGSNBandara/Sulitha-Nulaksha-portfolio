@@ -145,11 +145,6 @@ export default function Home() {
     }
   };
 
-  const downloadCV = () => {
-    // Replace with your actual CV file path
-    window.open('/path-to-your-cv.pdf', '_blank');
-  };
-
   const featuredProjects = getFeaturedProjects();
   const featuredExperiences = getFeaturedExperiences();
 
@@ -196,14 +191,6 @@ export default function Home() {
                 className="bg-primary text-white px-4 sm:px-8 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-primary/90 transition-colors"
               >
                 Get in Touch
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={downloadCV}
-                className="border-2 border-primary text-primary dark:text-primary px-4 sm:px-8 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-primary/10 transition-colors"
-              >
-                Download CV
               </motion.button>
             </div>
           </motion.div>
