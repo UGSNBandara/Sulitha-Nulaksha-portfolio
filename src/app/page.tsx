@@ -203,6 +203,17 @@ export default function Home() {
                 <SiLinkedin className="w-5 h-5" />
                 LinkedIn
               </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href="https://github.com/UGSNBandara"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-white px-4 sm:px-8 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-primary/90 transition-colors flex items-center gap-2"
+              >
+                <SiGithub className="w-5 h-5" />
+                GitHub
+              </motion.a>
             </div>
           </motion.div>
           <motion.div
