@@ -192,6 +192,17 @@ export default function Home() {
               >
                 Get in Touch
               </motion.button>
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href="https://www.linkedin.com/in/nulaksha-bandara/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-white px-4 sm:px-8 py-2 sm:py-3 rounded-full text-base sm:text-lg font-semibold hover:bg-primary/90 transition-colors flex items-center gap-2"
+              >
+                <SiLinkedin className="w-5 h-5" />
+                LinkedIn
+              </motion.a>
             </div>
           </motion.div>
           <motion.div
