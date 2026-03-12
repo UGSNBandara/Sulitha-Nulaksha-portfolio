@@ -1,5 +1,12 @@
 import { IconType } from 'react-icons';
 
+import carControllerData from './projects/Car_Controller';
+import subwaySurfersData from './projects/Subway_Surfers';
+import agreeDetectData from './projects/Agree_Detect';
+import anoNotesData from './projects/Ano_Notes';
+import quickRefData from './projects/QuickRef';
+import toDooData from './projects/To_Doo';
+
 
 export interface Project {
   title: string;
@@ -23,7 +30,7 @@ export const allProjects: Project[] = [
     title: "Car Driving Game Controller Using YOLOv8 and OpenCV",
     description: "Handcrafted gaming controller and AI with YOLOv8n + OpenCV for real-time control detection.",
     image: "/projects/CarControler/carcontroller.png",
-    tags: ["YOLOv8", "OpenCV", "Roboflow", "Computer Vision"],
+    tags: ["YOLOv8", "OpenCV", "Python", "C++"],
     link: "/projects/Car_Controller",
     gradient: {
       from: "from-red-500",
@@ -35,55 +42,55 @@ export const allProjects: Project[] = [
     title: "Subway Surfers Motion Controller",
     description: "Play Subway Surfers with real-time body movements using OpenCV + MediaPipe",
     image: "/projects/SubwaySufer/subwaysufer.png",
-    tags: ["Python", "OpenCV", "MediaPipe", "Real-Time CV"],
+    tags: ["Python", "OpenCV"],
     link: "/projects/Subway_Surfers",
     gradient: {
       from: "from-purple-500",
       to: "to-teal-600"
     },
-    featured: true
+    featured: false
   },
   {
     title: "DL Agree Disease Detector",
     description: "A web app using a TensorFlow model to detect crop diseases and suggest fertilizers.",
     image: "/projects/Agree_detect/cover.jpg",
-    tags: ["TensorFlow", "Deep Learning", "MERN Stack"],
+    tags: ["Deep Learning", "ML", "MERN", "Python"],
     link: "/projects/Agree_Detect",
     gradient: {
       from: "from-orange-500",
       to: "to-purple-600"
     },
-    featured: true
+    featured: false
   },
   {
     title: "Ano Note Funny webapp",
     description: "A web app for sharing anonymous notes, checked by AI to ensure they're kind and respectful",
     image: "/projects/Ano_Note/cover.png",
-    tags: ["FastAPI", "NLP", "MERN", "WordEmbedding"],
+    tags: ["FastAPI", "NLP", "MERN", "Python"],
     link: "/projects/Ano_Notes",
     gradient: {
       from: "from-orange-500",
       to: "to-teal-600"
     },
-    featured: true
+    featured: false
   },
   {
     title: "QuickRef URL PDF referencer",
     description: "A streamlined tool to quickly upload PDFs or URLs, process them, and query their content effortlessly.",
     image: "/projects/QuickRef/cover.png",
-    tags: ["LangChain", "Streamlit", "Python", "NVIDIA"],
+    tags: ["LangChain", "Python", "AI Agents"],
     link: "/projects/QuickRef",
     gradient: {
       from: "from-orange-500",
       to: "to-red-600"
     },
-    featured: true
+    featured: false
   },
   {
     title: "To Doo Mobile App",
     description: "Mobile app enabling users to add tasks, deadlines, view tasks prioritized, and track performance.",
     image: "/projects/To_Doo/cover.png",
-    tags: ["MERN", "MongoDB", "React"],
+    tags: ["MERN"],
     link: "/projects/To_Doo",
     gradient: {
       from: "from-orange-500",
@@ -106,4 +113,56 @@ export const getAllProjects = (): Project[] => {
 // Helper function to get image path with fallback
 export const getProjectImage = (project: Project): string => {
   return project.image || DEFAULT_PROJECT_IMAGE;
-}; 
+};
+
+// ─── Extended project detail types ───────────────────────────────────────────
+
+export interface ContentItem {
+  title?: string;
+  color?: 'blue' | 'green' | 'red' | 'orange' | 'purple';
+  points?: string[];
+  description?: string;
+}
+
+export interface ProjectSection {
+  emoji: string;
+  title: string;
+  items?: string[];
+  content?: ContentItem[];
+}
+
+export type LinkType =
+  | 'github' | 'linkedin' | 'wandb' | 'roboflow'
+  | 'streamlit' | 'huggingface' | 'android' | 'ios';
+
+export interface ProjectLink {
+  type: LinkType;
+  url: string;
+}
+
+export interface ProjectDetail {
+  slug: string;
+  title: string;
+  description: string;
+  subtitle?: string;
+  coverImage?: string;
+  coverEmbed?: string;
+  coverYoutube?: string;
+  tags: string[];
+  links: ProjectLink[];
+  sections: ProjectSection[];
+  gradient: { from: string; to: string };
+  featured?: boolean;
+}
+
+export const projectDetails: ProjectDetail[] = [
+  carControllerData,
+  subwaySurfersData,
+  agreeDetectData,
+  anoNotesData,
+  quickRefData,
+  toDooData,
+];
+
+export const getProjectDetail = (slug: string): ProjectDetail | undefined =>
+  projectDetails.find(p => p.slug === slug);
