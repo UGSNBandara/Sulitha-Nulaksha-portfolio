@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { SiGithub, SiLinkedin, SiHuggingface, SiStreamlit, SiAndroid, SiApple } from 'react-icons/si';
 import { FiExternalLink } from 'react-icons/fi';
-import type { ContentItem, LinkType, ProjectDetail, ProjectSection } from '@/data/projects';
+import type { ContentItem, LinkType, ProjectDetail, ProjectSection, ProjectVideo } from '@/data/projects';
 
 const ACCENT = '#007AFF';
 
@@ -71,6 +71,23 @@ function SectionBlock({ section }: { section: ProjectSection }) {
           {section.items.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
       )}
+      {section.imageBlock && (
+        <div className="my-4 overflow-hidden rounded-2xl border border-white/60 bg-white/70 p-3 shadow-md dark:border-white/10 dark:bg-slate-800/50">
+          <div className="relative h-72 w-full overflow-hidden rounded-xl">
+            <Image src={section.imageBlock.src} alt={section.imageBlock.alt} fill className="object-cover" />
+          </div>
+          {(section.imageBlock.title || section.imageBlock.description) && (
+            <div className="px-1 pb-1 pt-3">
+              {section.imageBlock.title && (
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white">{section.imageBlock.title}</h3>
+              )}
+              {section.imageBlock.description && (
+                <p className="mt-1 text-slate-600 dark:text-slate-300">{section.imageBlock.description}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
       {section.content && (
         <div className="space-y-3">
           {section.content.map((card, i) => <ContentCard key={i} card={card} />)}
@@ -78,6 +95,45 @@ function SectionBlock({ section }: { section: ProjectSection }) {
       )}
     </>
   );
+}
+
+function VideoCard({ video, index }: { video: ProjectVideo; index: number }) {
+  const normalizeEmbedHtml = (html: string): string => {
+    // Force embeds (e.g., LinkedIn) to fill the same card box as YouTube.
+    const sized = html
+      .replace(/width="[^"]*"/i, 'width="100%"')
+      .replace(/height="[^"]*"/i, 'height="100%"');
+
+    return sized.replace('<iframe ', '<iframe style="width:100%;height:100%;border:0;" ');
+  };
+
+  if (video.type === 'youtube' && video.youtubeId) {
+    return (
+      <div className="h-[360px] w-full overflow-hidden rounded-xl md:h-[420px]">
+        <iframe
+          width="100%"
+          height="100%"
+          src={`https://www.youtube.com/embed/${video.youtubeId}`}
+          title={video.title ?? `Demo ${index + 1}`}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="h-full w-full rounded-xl"
+        />
+      </div>
+    );
+  }
+
+  if (video.type === 'embed' && video.embedHtml) {
+    return (
+      <div
+        className="h-[360px] w-full overflow-hidden rounded-xl md:h-[420px]"
+        dangerouslySetInnerHTML={{ __html: normalizeEmbedHtml(video.embedHtml) }}
+      />
+    );
+  }
+
+  return null;
 }
 
 export default function ProjectDetailPage({ project }: { project: ProjectDetail }) {
@@ -119,8 +175,20 @@ export default function ProjectDetailPage({ project }: { project: ProjectDetail 
           </div>
         </motion.section>
 
-        {/* ── Cover: LinkedIn embed ── */}
-        {project.coverEmbed && (
+        {/* ── Videos: mixed media (new) ── */}
+        {project.videos && project.videos.length > 0 && (
+          <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
+            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demos</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {project.videos.map((video, index) => (
+                <VideoCard key={`video-${index}`} video={video} index={index} />
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ── Cover: LinkedIn embed (legacy single embed) ── */}
+        {(!project.videos || project.videos.length === 0) && project.coverEmbed && (
           <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
             <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demo</h2>
             <div
@@ -131,7 +199,30 @@ export default function ProjectDetailPage({ project }: { project: ProjectDetail 
         )}
 
         {/* ── Cover: YouTube ── */}
-        {!project.coverEmbed && project.coverYoutube && (
+        {(!project.videos || project.videos.length === 0) && !project.coverEmbed && project.coverYoutubes && project.coverYoutubes.length > 0 && (
+          <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
+            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demos</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {project.coverYoutubes.map((youtubeId, index) => (
+                <div key={`${youtubeId}-${index}`} className="overflow-hidden rounded-xl">
+                  <iframe
+                    width="100%"
+                    height="300"
+                    src={`https://www.youtube.com/embed/${youtubeId}`}
+                    title={`Demo ${index + 1}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="rounded-xl"
+                  />
+                </div>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ── Cover: YouTube (legacy single video) ── */}
+        {(!project.videos || project.videos.length === 0) && !project.coverEmbed && (!project.coverYoutubes || project.coverYoutubes.length === 0) && project.coverYoutube && (
           <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
             <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demo</h2>
             <div className="overflow-hidden rounded-xl">
@@ -150,7 +241,7 @@ export default function ProjectDetailPage({ project }: { project: ProjectDetail 
         )}
 
         {/* ── Cover: image ── */}
-        {!project.coverEmbed && !project.coverYoutube && project.coverImage && (
+        {(!project.videos || project.videos.length === 0) && !project.coverEmbed && (!project.coverYoutubes || project.coverYoutubes.length === 0) && !project.coverYoutube && project.coverImage && (
           <motion.section {...rowV(0.12)} className="mb-6 overflow-hidden rounded-[2rem]">
             <div className="relative h-72 w-full">
               <Image src={project.coverImage} alt={project.title} fill className="object-cover" priority />

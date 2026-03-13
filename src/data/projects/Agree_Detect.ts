@@ -6,7 +6,7 @@ const project: ProjectDetail = {
   description:
     'An AI-based system to classify crops and predict diseases for Potato and Bell Pepper using TensorFlow, with suggestions for appropriate fertilizers.',
   coverImage: '/projects/Agree_detect/cover.jpg',
-  tags: ['React.js', 'FastAPI', 'TensorFlow', 'Deep Learning', 'Python'],
+  tags: ['React.js', 'FastAPI', 'TensorFlow', 'Deep Learning', 'Python', 'AR'],
   links: [
     { type: 'github',   url: 'https://github.com/UGSNBandara/Agri-Detect' },
     {

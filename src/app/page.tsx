@@ -14,10 +14,10 @@ import { getFeaturedExperiences } from '@/data/experience';
 
 // ─── Nav items — blue / white / black palette only ─────────────────────────
 const orbitLinks = [
-  { label: 'About',      href: '/profile',    description: 'Story, skills & contact'  },
-  { label: 'Projects',   href: '/projects',   description: 'Builds & case studies'     },
-  { label: 'Experience', href: '/experience', description: 'Timeline & achievements'   },
-  { label: 'Research',   href: '/research',   description: 'Writing & experiments'     },
+  { label: 'Profile',    href: '/profile',    description: 'Skills, Education, Story' },
+  { label: 'Projects',   href: '/projects',   description: 'Latest projects'          },
+  { label: 'Experience', href: '/experience', description: 'Working experience, Competitions, Awards' },
+  { label: 'Research',   href: '/research',   description: 'Research Articles'        },
 ];
 // Single accent for all segments — blue that works in both themes
 const ACCENT = '#007AFF';
@@ -27,6 +27,10 @@ const socialLinks = [
   { label: 'GitHub',   href: 'https://github.com/UGSNBandara',                icon: SiGithub   },
   { label: 'Email',    href: 'mailto:sulithanb119@gmail.com',                  icon: MdEmail    },
 ];
+
+// Shared dashed-border tuning for card frame + tooltips
+const DASH_LENGTH = 6; // length of each dash in px — increase for longer dashes
+const DASH_GAP    = 8; // gap between dashes in px — increase for more spacing
 
 // ─── Feed: featured projects + featured experiences ─────────────────────────
 interface HomeFeedItem {
@@ -72,11 +76,11 @@ const FEED_LEN = feedItems.length;
 const S        = 500;                          // canvas width & height
 const CX       = S / 2;                        // 250
 const CY       = S / 2;                        // 250
-const INNER_R  = 160;                          // inner dashed ring radius
-const SEG_IR   = 168;                          // segment inner edge — 8 px gap from ring
-const OUTER_R  = 218;                          // outer edge
+const INNER_R  = 170;                          // inner dashed ring radius
+const SEG_IR   = 178;                          // segment inner edge — 8 px gap from ring
+const OUTER_R  = 228;                          // outer edge
 const TEXT_R   = (SEG_IR + OUTER_R) / 2;      // mid of segment band for text
-const IMG_R    = 150;                          // image radius (must stay < INNER_R)
+const IMG_R    = 160;                          // image radius (must stay < INNER_R)
 const N        = orbitLinks.length;
 const GAP      = 4;                            // degrees of gap between segments
 const SPAN     = 360 / N - GAP;               // degrees this segment spans
@@ -232,7 +236,21 @@ export default function Home() {
                   aspectRatio: '16 / 9',
                   width: '94%',
                   borderRadius: '20px',
-                  border: '2px dashed rgba(255,255,255,0.50)',
+                  // Dashed frame using repeating-linear-gradient so dash length & gap are controllable
+                  border: 'none',
+                  backgroundImage: [
+                    // top
+                    `repeating-linear-gradient(to right, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                    // bottom
+                    `repeating-linear-gradient(to right, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                    // left
+                    `repeating-linear-gradient(to bottom, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                    // right
+                    `repeating-linear-gradient(to bottom, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                  ].join(','),
+                  backgroundSize: '100% 1.5px, 100% 1.5px, 1.5px 100%, 1.5px 100%',
+                  backgroundPosition: '0 0, 0 100%, 0 0, 100% 0',
+                  backgroundRepeat: 'no-repeat',
                   padding: '8px',
                 }}
               >
@@ -269,13 +287,6 @@ export default function Home() {
                       className="absolute left-0 inset-y-0 w-1 rounded-l-2xl"
                       style={{ background: ACCENT }}
                     />
-                    {/* Type badge — top left, always blue */}
-                    <span
-                      className="absolute left-4 top-3 select-none rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.25em]"
-                      style={{ background: `${ACCENT}33`, color: ACCENT, border: `1px solid ${ACCENT}55` }}
-                    >
-                      {item.type}
-                    </span>
                     {/* Counter — top right */}
                     <span className="absolute right-4 top-3 select-none font-mono text-[10px] text-white/25">
                       {String(idx + 1).padStart(2, '0')}&nbsp;/&nbsp;{String(FEED_LEN).padStart(2, '0')}
@@ -283,8 +294,7 @@ export default function Home() {
                     {/* Content — bottom left */}
                     <div className="absolute bottom-0 left-0 right-0 px-5 py-5">
                       <p
-                        className="text-[9px] font-bold uppercase tracking-[0.3em]"
-                        style={{ color: ACCENT }}
+                        className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/70"
                       >
                         {item.sub}
                       </p>
@@ -521,15 +531,31 @@ export default function Home() {
                 const tyPct   = ((CY + tR * Math.sin(midRad)) / S) * 100;
                 const anchorX = txPct < 50 ? 'right' : 'left';
                 const anchorY = tyPct < 50 ? 'bottom' : 'top';
+                const lines   = seg.description.split(',').map(part => part.trim());
                 return (
                   <div
                     key={seg.i}
-                    className="pointer-events-none absolute z-30 w-48 rounded-2xl border border-white/60 bg-white/96 p-3.5 shadow-xl backdrop-blur-sm dark:border-white/10 dark:bg-slate-950/95"
+                    className="pointer-events-none absolute z-30 w-48 rounded-2xl"
                     style={{
                       left:      `${txPct}%`,
                       top:       `${tyPct}%`,
                       transform: `translate(${anchorX === 'left' ? '4px' : 'calc(-100% - 4px)'}, ${anchorY === 'top' ? '4px' : 'calc(-100% - 4px)'})`,
                       opacity:   active2 ? 1 : 0,
+                      padding:   '4px', // small gap between border and glowing box
+                      border:    'none',
+                      backgroundImage: [
+                        // top
+                        `repeating-linear-gradient(to right, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.9) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                        // bottom
+                        `repeating-linear-gradient(to right, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.9) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                        // left
+                        `repeating-linear-gradient(to bottom, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.9) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                        // right
+                        `repeating-linear-gradient(to bottom, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.9) ${DASH_LENGTH}px, transparent ${DASH_LENGTH}px, transparent ${DASH_LENGTH + DASH_GAP}px)`,
+                      ].join(','),
+                      backgroundSize: '100% 1.5px, 100% 1.5px, 1.5px 100%, 1.5px 100%',
+                      backgroundPosition: '0 0, 0 100%, 0 0, 100% 0',
+                      backgroundRepeat: 'no-repeat',
                       // Appear: wait for line to fully draw (0.5s delay)
                       // Disappear: fade out first (no delay) so line can then retract
                       transition: active2
@@ -537,15 +563,22 @@ export default function Home() {
                         : 'opacity 0.2s ease',
                     }}
                   >
-                    <p
-                      className="text-[0.65rem] font-bold uppercase tracking-[0.3em]"
-                      style={{ color: ACCENT }}
+                    <div
+                      className="w-full rounded-2xl p-3.5"
+                      style={{
+                        boxShadow: `inset 0 0 18px ${ACCENT}99`,
+                        background: 'transparent',
+                      }}
                     >
-                      {seg.label}
-                    </p>
-                    <p className="mt-1.5 text-xs leading-5 text-slate-600 dark:text-slate-300">
-                      {seg.description}
-                    </p>
+                      <p className="text-xs leading-5 text-slate-50 text-center">
+                        {lines.map((line, i) => (
+                          <span key={i}>
+                            {line}
+                            {i < lines.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
                   </div>
                 );
               })}

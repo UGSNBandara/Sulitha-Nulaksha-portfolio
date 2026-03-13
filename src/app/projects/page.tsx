@@ -11,6 +11,9 @@ function ProjectsContent() {
   const searchParams = useSearchParams();
   const skillFilter = searchParams.get('skill') ?? '';
 
+  const summarizeCardDescription = (text: string, max = 100): string =>
+    text.length <= max ? text : `${text.slice(0, max - 3)}...`;
+
   const allProjects = getAllProjects();
   const projects = skillFilter
     ? allProjects.filter(p =>
@@ -91,9 +94,9 @@ function ProjectsContent() {
                     </div>
                   </div>
                   <div className="p-4">
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">{summarizeCardDescription(project.description, 100)}</p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.map((tag, tagIndex) => (
+                      {project.tags.slice(0, 4).map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
                           className={`px-3 py-1 text-sm rounded-full bg-opacity-10 border border-opacity-20

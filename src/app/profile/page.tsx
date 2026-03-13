@@ -33,9 +33,10 @@ const techSkills = [
   { name: 'NLP',        icon: SiSpacy,      color: '#dbeafe', iconColor: '#09A3D5', filterTag: 'NLP'          },
   { name: 'LangChain',  icon: null, image: '/images/logo/langchain-color.png', color: '#ede9fe', iconColor: '#412991', filterTag: 'LangChain' },
   { name: 'MERN',       icon: null, image: '/images/logo/mern.png',      color: '#dbeafe', iconColor: '#61DAFB', filterTag: 'MERN'  },
-  { name: 'OpenCV',     icon: SiOpencv,     color: '#ede9fe', iconColor: '#5C3EE8', filterTag: 'OpenCV'       },
+  { name: 'Computer Vision', icon: SiOpencv,     color: '#ede9fe', iconColor: '#5C3EE8', filterTag: 'Computer Vision' },
   { name: 'YOLO',       icon: null, image: '/images/logo/yolo.png',      color: '#fef3c7', iconColor: '#FF6F00', filterTag: 'YOLOv8' },
   { name: 'AI Agents',  icon: null, image: '/images/logo/google adk.png',color: '#dbeafe', iconColor: '#007AFF', filterTag: 'AI Agents' },
+  { name: 'AR',         icon: SiUnity,      color: '#d1fae5', iconColor: '#16a34a', filterTag: 'AR' },
 ] as const;
 
 // ─── Soft skills (each links to /experience?skill=filterTag) ─────────────────

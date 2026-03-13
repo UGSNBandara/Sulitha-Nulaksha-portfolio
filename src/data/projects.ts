@@ -6,6 +6,7 @@ import agreeDetectData from './projects/Agree_Detect';
 import anoNotesData from './projects/Ano_Notes';
 import quickRefData from './projects/QuickRef';
 import toDooData from './projects/To_Doo';
+import sofiaData from './projects/SofiaProject';
 
 
 export interface Project {
@@ -27,10 +28,22 @@ const DEFAULT_PROJECT_IMAGE = "/projects/default-project.svg";
 // All projects data
 export const allProjects: Project[] = [
   {
+    title: "SOFIA: AI-Powered Virtual Customer Interaction Assistant",
+    description: "Context-aware AI assistant with 3D avatar, AR, vision intelligence, and adaptive customer support.",
+    image: "/projects/SOFIA/cover.jpg",
+    tags: ["AI Agents", "Computer Vision", "Unity", "C#", "AR", "FastAPI", "Python"],
+    link: "/projects/SOFIA",
+    gradient: {
+      from: "from-blue-500",
+      to: "to-cyan-600"
+    },
+    featured: true
+  },
+  {
     title: "Car Driving Game Controller Using YOLOv8 and OpenCV",
     description: "Handcrafted gaming controller and AI with YOLOv8n + OpenCV for real-time control detection.",
     image: "/projects/CarControler/carcontroller.png",
-    tags: ["YOLOv8", "OpenCV", "Python", "C++"],
+    tags: ["YOLOv8", "Computer Vision", "Python", "C++"],
     link: "/projects/Car_Controller",
     gradient: {
       from: "from-red-500",
@@ -42,7 +55,7 @@ export const allProjects: Project[] = [
     title: "Subway Surfers Motion Controller",
     description: "Play Subway Surfers with real-time body movements using OpenCV + MediaPipe",
     image: "/projects/SubwaySufer/subwaysufer.png",
-    tags: ["Python", "OpenCV"],
+    tags: ["Python", "Computer Vision"],
     link: "/projects/Subway_Surfers",
     gradient: {
       from: "from-purple-500",
@@ -54,7 +67,7 @@ export const allProjects: Project[] = [
     title: "DL Agree Disease Detector",
     description: "A web app using a TensorFlow model to detect crop diseases and suggest fertilizers.",
     image: "/projects/Agree_detect/cover.jpg",
-    tags: ["Deep Learning", "ML", "MERN", "Python"],
+    tags: ["Deep Learning", "ML", "MERN", "Python", "FastAPI"],
     link: "/projects/Agree_Detect",
     gradient: {
       from: "from-orange-500",
@@ -66,7 +79,7 @@ export const allProjects: Project[] = [
     title: "Ano Note Funny webapp",
     description: "A web app for sharing anonymous notes, checked by AI to ensure they're kind and respectful",
     image: "/projects/Ano_Note/cover.png",
-    tags: ["FastAPI", "NLP", "MERN", "Python"],
+    tags: ["FastAPI", "NLP", "MERN", "Python", "FastAPI"],
     link: "/projects/Ano_Notes",
     gradient: {
       from: "from-orange-500",
@@ -128,6 +141,12 @@ export interface ProjectSection {
   emoji: string;
   title: string;
   items?: string[];
+  imageBlock?: {
+    src: string;
+    alt: string;
+    title?: string;
+    description?: string;
+  };
   content?: ContentItem[];
 }
 
@@ -140,14 +159,23 @@ export interface ProjectLink {
   url: string;
 }
 
+export interface ProjectVideo {
+  type: 'youtube' | 'embed';
+  youtubeId?: string;
+  embedHtml?: string;
+  title?: string;
+}
+
 export interface ProjectDetail {
   slug: string;
   title: string;
   description: string;
   subtitle?: string;
+  videos?: ProjectVideo[];
   coverImage?: string;
   coverEmbed?: string;
   coverYoutube?: string;
+  coverYoutubes?: string[];
   tags: string[];
   links: ProjectLink[];
   sections: ProjectSection[];
@@ -156,6 +184,7 @@ export interface ProjectDetail {
 }
 
 export const projectDetails: ProjectDetail[] = [
+  sofiaData,
   carControllerData,
   subwaySurfersData,
   agreeDetectData,
