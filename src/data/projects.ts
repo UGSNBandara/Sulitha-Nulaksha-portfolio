@@ -49,7 +49,7 @@ export const allProjects: Project[] = [
       from: "from-red-500",
       to: "to-orange-600"
     },
-    featured: true
+    featured: false
   },
   {
     title: "Subway Surfers Motion Controller",

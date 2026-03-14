@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FiMoon, FiSun } from 'react-icons/fi';
-import { SiGithub, SiLinkedin } from 'react-icons/si';
-import { MdEmail } from 'react-icons/md';
+import { SiGithub, SiLinkedin, SiWhatsapp } from 'react-icons/si';
+import { MdEmail, MdClose, MdLocationOn } from 'react-icons/md';
 import { getFeaturedProjects } from '@/data/projects';
 import { getFeaturedExperiences } from '@/data/experience';
 
@@ -25,7 +25,13 @@ const ACCENT = '#007AFF';
 const socialLinks = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nulaksha-bandara/', icon: SiLinkedin },
   { label: 'GitHub',   href: 'https://github.com/UGSNBandara',                icon: SiGithub   },
-  { label: 'Email',    href: 'mailto:sulithanb119@gmail.com',                  icon: MdEmail    },
+];
+
+const contactItems = [
+  { label: 'Personal Email',   value: 'sulithanb119@gmail.com',    href: 'mailto:sulithanb119@gmail.com',   Icon: MdEmail,      color: '#ef4444' },
+  { label: 'University Email', value: 'eg244962@engug.ruh.ac.lk', href: 'mailto:eg244962@engug.ruh.ac.lk', Icon: MdEmail,      color: '#ef4444' },
+  { label: 'WhatsApp',         value: '+94 71 426 2972',           href: 'https://wa.me/94714262972',      Icon: SiWhatsapp,   color: '#22c55e' },
+  { label: 'Location',         value: 'Galle, Sri Lanka',          href: '',                               Icon: MdLocationOn, color: '#3b82f6' },
 ];
 
 // Shared dashed-border tuning for card frame + tooltips
@@ -144,6 +150,7 @@ export default function Home() {
   const [hovered, setHovered]       = useState<number | null>(null);
   const [glowIndex, setGlowIndex]   = useState<number>(0);
   const [feedIdx, setFeedIdx]       = useState<number>(0);
+  const [contactOpen, setContactOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => { setMounted(true); }, []);
@@ -223,6 +230,23 @@ export default function Home() {
                   {label}
                 </motion.a>
               ))}
+              <motion.button
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => router.push('/cv')}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100"
+              >
+                CV
+              </motion.button>
+              <motion.button
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setContactOpen(true)}
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition hover:bg-primary/90"
+                style={{ background: ACCENT }}
+              >
+                Contact
+              </motion.button>
             </div>
 
             {/* ── Camera Roll Feed ── */}
@@ -610,6 +634,73 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* Contact popup */}
+      <AnimatePresence>
+        {contactOpen && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+              onClick={() => setContactOpen(false)}
+            />
+            <motion.div
+              key="modal"
+              initial={{ opacity: 0, scale: 0.9, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 24 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+              className="fixed inset-0 z-50 flex items-center justify-center px-4"
+            >
+              <div
+                className="w-full max-w-md rounded-2xl border border-white/70 bg-white/95 p-6 shadow-2xl dark:border-white/10 dark:bg-slate-950"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="mb-5 flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">Contact</h2>
+                  <button
+                    onClick={() => setContactOpen(false)}
+                    className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white"
+                  >
+                    <MdClose className="h-5 w-5" />
+                  </button>
+                </div>
+                <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
+                  Feel free to reach out for collaborations, research, or project work.
+                </p>
+                <div className="space-y-3">
+                  {contactItems.map((item) => {
+                    const inner = (
+                      <div className="flex items-center gap-4 rounded-2xl bg-slate-50 px-4 py-3 transition-colors hover:bg-primary/5 dark:bg-slate-900">
+                        <item.Icon className="h-6 w-6 flex-none" style={{ color: item.color }} />
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{item.label}</p>
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{item.value}</p>
+                        </div>
+                      </div>
+                    );
+                    return item.href ? (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                        rel={item.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div key={item.label}>{inner}</div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

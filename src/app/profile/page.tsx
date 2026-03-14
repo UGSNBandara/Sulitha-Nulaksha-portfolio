@@ -231,46 +231,50 @@ export default function ProfilePage() {
             {/* modal */}
             <motion.div
               key="modal"
-              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              initial={{ opacity: 0, scale: 0.9, y: 24 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 24 }}
-              transition={{ type: 'spring', stiffness: 280, damping: 26 }}
-              className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-md rounded-t-[2rem] border border-white/60 bg-white/98 p-8 shadow-2xl dark:border-white/10 dark:bg-slate-950 sm:static sm:rounded-[2rem]"
-              style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: 440 } as React.CSSProperties}
+              exit={{ opacity: 0, scale: 0.9, y: 24 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+              className="fixed inset-0 z-50 flex items-center justify-center px-4"
             >
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Get in Touch</h2>
-                <button
-                  onClick={() => setContactOpen(false)}
-                  className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white"
-                >
-                  <MdClose className="h-5 w-5" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                {contactItems.map(item => {
-                  const inner = (
-                    <div className="flex items-center gap-4 rounded-2xl bg-slate-50 px-4 py-4 transition-colors hover:bg-primary/5 dark:bg-slate-900">
-                      <item.Icon className="h-6 w-6 flex-none" style={{ color: item.color }} />
-                      <div>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{item.label}</p>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{item.value}</p>
+              <div
+                className="w-full max-w-md rounded-2xl border border-white/70 bg-white/95 p-8 shadow-2xl dark:border-white/10 dark:bg-slate-950"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">Get in Touch</h2>
+                  <button
+                    onClick={() => setContactOpen(false)}
+                    className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white"
+                  >
+                    <MdClose className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  {contactItems.map(item => {
+                    const inner = (
+                      <div className="flex items-center gap-4 rounded-2xl bg-slate-50 px-4 py-4 transition-colors hover:bg-primary/5 dark:bg-slate-900">
+                        <item.Icon className="h-6 w-6 flex-none" style={{ color: item.color }} />
+                        <div>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{item.label}</p>
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{item.value}</p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                  return item.href ? (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      target={item.href.startsWith('mailto:') ? undefined : '_blank'}
-                      rel={item.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                    >
-                      {inner}
-                    </a>
-                  ) : (
-                    <div key={item.label}>{inner}</div>
-                  );
-                })}
+                    );
+                    return item.href ? (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target={item.href.startsWith('mailto:') ? undefined : '_blank'}
+                        rel={item.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      <div key={item.label}>{inner}</div>
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
           </>

@@ -19,16 +19,16 @@ const DEFAULT_EXPERIENCE_IMAGE = "/experiences/default-experience.svg";
 export const allExperiences: Experience[] = [
   {
     year: "2025",
-    title: "2nd Place Sri Lanka, 56th Worldwide",
-    organization: "IEEEXtreme 19.0",
-    description: "Team SimpleCoders achieved 2nd place in Sri Lanka and 56th worldwide in IEEEXtreme 19.0, a prestigious global coding competition organized by IEEE.",
-    image: "/experiences/IEEE_Xtreme19.0/xtreme.jpeg",
-    tags: ["Problem Solving", "Critical Thinking", "Analytical Thinking", "Team Collaboration"],
+    title: "Top 50 Rising Founders – Awarded by the Prime Minister",
+    organization: "Neo Ventures National Innovation Accelerator Program",
+    description: "Selected as one of the Top 50 Rising Founders in the Neo Ventures National Innovation Accelerator Program 2025, receiving recognition and an award from the Prime Minister.",
+    image: "/experiences/Neo_Ventures/cover.jpg", // TODO: add this image file
+    tags: ["Leadership", "Problem Solving", "Communication Skills", "Research Mindset"],
     gradient: {
-      from: "from-red-500",
-      to: "to-yellow-600"
+      from: "from-sky-500",
+      to: "to-indigo-600"
     },
-    featured: false
+    featured: true
   },
   {
     year: "2025",
