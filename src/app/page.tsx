@@ -242,8 +242,8 @@ export default function Home() {
                 whileHover={{ y: -2, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setContactOpen(true)}
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition hover:bg-primary/90"
-                style={{ background: ACCENT }}
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100"
+                style={{ boxShadow: `inset 0 0 18px ${ACCENT}66` }}
               >
                 Contact
               </motion.button>
