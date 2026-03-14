@@ -7,6 +7,7 @@ import anoNotesData from './projects/Ano_Notes';
 import quickRefData from './projects/QuickRef';
 import toDooData from './projects/To_Doo';
 import sofiaData from './projects/SofiaProject';
+import lumRunMotionXData from './projects/LumRun_MotionX';
 
 
 export interface Project {
@@ -38,6 +39,19 @@ export const allProjects: Project[] = [
       to: "to-cyan-600"
     },
     featured: true
+  },
+  {
+    title: "LumRun – MotionX",
+    description:
+      "Pose-controlled running game from the MotionX series",
+    image: "/projects/LumRun_MotionX/cover.jpg",
+    tags: ["Computer Vision", "Unity", "Python", "C#"],
+    link: "/projects/LumRun_MotionX",
+    gradient: {
+      from: "from-purple-500",
+      to: "to-indigo-600",
+    },
+    featured: true,
   },
   {
     title: "Car Driving Game Controller Using YOLOv8 and OpenCV",
@@ -185,6 +199,7 @@ export interface ProjectDetail {
 
 export const projectDetails: ProjectDetail[] = [
   sofiaData,
+  lumRunMotionXData,
   carControllerData,
   subwaySurfersData,
   agreeDetectData,
