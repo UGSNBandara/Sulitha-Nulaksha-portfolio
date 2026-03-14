@@ -80,7 +80,7 @@ export const allExperiences: Experience[] = [
       from: "from-purple-500",
       to: "to-pink-600"
     },
-    featured: true
+    featured: false
   },
   {
     year: "2025",
