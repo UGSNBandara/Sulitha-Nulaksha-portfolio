@@ -1,88 +1,125 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SiGithub, SiLinkedin, SiHuggingface, SiStreamlit, SiAndroid, SiApple } from 'react-icons/si';
-import { FiExternalLink } from 'react-icons/fi';
+import { FiExternalLink, FiSun, FiMoon } from 'react-icons/fi';
 import type { ContentItem, LinkType, ProjectDetail, ProjectSection, ProjectVideo } from '@/data/projects';
-
-const ACCENT = '#007AFF';
-
-const BG =
-  'relative min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top,_rgba(0,122,255,0.18),_transparent_30%),linear-gradient(135deg,_#f8fbff_0%,_#eef4ff_40%,_#ffffff_100%)] dark:bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] py-20';
-
-const CARD =
-  'rounded-[2rem] border border-white/60 bg-white/90 p-6 shadow-xl dark:border-white/10 dark:bg-slate-900/80 backdrop-blur-md';
-
-const NAV_PILL =
-  'rounded-full border border-slate-200 bg-white/80 px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:border-primary hover:text-primary dark:border-white/10 dark:bg-slate-900/80 dark:text-slate-100';
-
-const rowV = (delay: number) => ({
-  initial: { opacity: 0, y: 22 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.48, delay },
-});
 
 type IconComp = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 
-const LINK_META: Record<LinkType, { label: string; color: string; Icon: IconComp }> = {
-  github:      { label: 'GitHub',       color: '#333333', Icon: SiGithub       },
-  linkedin:    { label: 'LinkedIn',     color: '#0077B5', Icon: SiLinkedin     },
-  wandb:       { label: 'W&B Report',   color: '#FFBE00', Icon: FiExternalLink },
-  roboflow:    { label: 'Roboflow',     color: '#6706CE', Icon: FiExternalLink },
-  streamlit:   { label: 'Live Demo',    color: '#FF4B4B', Icon: SiStreamlit    },
-  huggingface: { label: 'Hugging Face', color: '#FFD21E', Icon: SiHuggingface  },
-  android:     { label: 'Android APK',  color: '#3DDC84', Icon: SiAndroid      },
-  ios:         { label: 'iOS',          color: '#555555', Icon: SiApple        },
+const LINK_META: Record<LinkType, { label: string; Icon: IconComp }> = {
+  github:      { label: 'GitHub',       Icon: SiGithub       },
+  linkedin:    { label: 'LinkedIn',     Icon: SiLinkedin     },
+  wandb:       { label: 'W&B Report',   Icon: FiExternalLink },
+  roboflow:    { label: 'Roboflow',     Icon: FiExternalLink },
+  streamlit:   { label: 'Live Demo',    Icon: SiStreamlit    },
+  huggingface: { label: 'Hugging Face', Icon: SiHuggingface  },
+  android:     { label: 'Android APK',  Icon: SiAndroid      },
+  ios:         { label: 'iOS',          Icon: SiApple        },
 };
 
-const COLOR_CLASS: Record<string, string> = {
-  blue:   'text-blue-600 dark:text-blue-400',
-  green:  'text-green-600 dark:text-green-400',
-  red:    'text-red-600 dark:text-red-400',
-  orange: 'text-orange-600 dark:text-orange-400',
-  purple: 'text-purple-600 dark:text-purple-400',
-};
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 32 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
+});
 
-function ContentCard({ card }: { card: ContentItem }) {
-  const colorCls = card.color ? (COLOR_CLASS[card.color] ?? 'text-primary') : 'text-primary';
+// ─── Theme tokens ─────────────────────────────────────────────────────────────
+type Theme = 'dark' | 'light';
+
+function tokens(theme: Theme) {
+  const dark = theme === 'dark';
+  return {
+    bg:           dark ? '#0b1012'                    : '#f3f0ec',
+    glow:         dark ? 'rgba(212,206,198,0.06)'     : 'rgba(33,35,37,0.05)',
+    text:         dark ? '#f3f0ec'                    : '#0b1012',
+    textMuted:    dark ? 'rgba(243,240,236,0.55)'     : 'rgba(33,35,37,0.55)',
+    textFaint:    dark ? 'rgba(243,240,236,0.3)'      : 'rgba(33,35,37,0.3)',
+    panelBg:      dark ? 'rgba(243,240,236,0.04)'     : 'rgba(33,35,37,0.04)',
+    panelBorder:  dark ? 'rgba(243,240,236,0.08)'     : 'rgba(33,35,37,0.08)',
+    tagBg:        dark ? 'rgba(243,240,236,0.06)'     : 'rgba(33,35,37,0.06)',
+    tagBorder:    dark ? 'rgba(243,240,236,0.1)'      : 'rgba(33,35,37,0.1)',
+    tagText:      dark ? 'rgba(243,240,236,0.5)'      : 'rgba(33,35,37,0.5)',
+    divider:      dark ? 'rgba(243,240,236,0.07)'     : 'rgba(33,35,37,0.1)',
+    navBg:        dark ? 'rgba(243,240,236,0.06)'     : 'rgba(33,35,37,0.06)',
+    navBorder:    dark ? 'rgba(243,240,236,0.12)'     : 'rgba(33,35,37,0.12)',
+    navText:      dark ? 'rgba(243,240,236,0.7)'      : 'rgba(33,35,37,0.7)',
+    navPillBg:    dark ? '#f3f0ec'                    : '#0b1012',
+    navPillText:  dark ? '#0b1012'                    : '#f3f0ec',
+  };
+}
+
+// ─── Sub-components ────────────────────────────────────────────────────────────
+
+function ContentCard({ card, t }: { card: ContentItem; t: ReturnType<typeof tokens> }) {
   return (
-    <div className="rounded-xl bg-slate-50/60 p-4 dark:bg-slate-800/40">
-      {card.title && <h3 className={`mb-2 font-semibold ${colorCls}`}>{card.title}</h3>}
-      {card.description && <p className="text-slate-600 dark:text-slate-300">{card.description}</p>}
+    <div
+      className="rounded-xl p-4"
+      style={{ background: t.panelBg, border: `1px solid ${t.panelBorder}` }}
+    >
+      {card.title && (
+        <h4 className="mb-2 text-sm font-semibold" style={{ color: t.text }}>
+          {card.title}
+        </h4>
+      )}
+      {card.description && (
+        <p className="text-sm leading-relaxed" style={{ color: t.textMuted }}>
+          {card.description}
+        </p>
+      )}
       {card.points && (
-        <ul className="list-disc space-y-1 pl-5 text-slate-600 dark:text-slate-300">
-          {card.points.map((pt, i) => <li key={i}>{pt}</li>)}
+        <ul className="space-y-1.5 pl-4" style={{ listStyleType: 'disc' }}>
+          {card.points.map((pt, i) => (
+            <li key={i} className="text-sm leading-relaxed" style={{ color: t.textMuted }}>
+              {pt}
+            </li>
+          ))}
         </ul>
       )}
     </div>
   );
 }
 
-function SectionBlock({ section }: { section: ProjectSection }) {
+function SectionBlock({ section, t }: { section: ProjectSection; t: ReturnType<typeof tokens> }) {
   return (
-    <>
-      <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
+    <div>
+      <h2
+        className="mb-5 font-medium uppercase"
+        style={{ color: t.textFaint, letterSpacing: '0.12em', fontSize: '0.68rem' }}
+      >
         {section.emoji} {section.title}
       </h2>
       {section.items && (
-        <ul className="list-disc space-y-2 pl-5 text-slate-600 dark:text-slate-300">
-          {section.items.map((item, i) => <li key={i}>{item}</li>)}
+        <ul className="space-y-2.5 pl-4" style={{ listStyleType: 'disc' }}>
+          {section.items.map((item, i) => (
+            <li key={i} className="text-sm leading-relaxed" style={{ color: t.textMuted }}>
+              {item}
+            </li>
+          ))}
         </ul>
       )}
       {section.imageBlock && (
-        <div className="my-4 overflow-hidden rounded-2xl border border-white/60 bg-white/70 p-3 shadow-md dark:border-white/10 dark:bg-slate-800/50">
-          <div className="relative h-72 w-full overflow-hidden rounded-xl">
+        <div
+          className="my-5 overflow-hidden rounded-2xl"
+          style={{ border: `1px solid ${t.panelBorder}` }}
+        >
+          <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
             <Image src={section.imageBlock.src} alt={section.imageBlock.alt} fill className="object-cover" />
           </div>
           {(section.imageBlock.title || section.imageBlock.description) && (
-            <div className="px-1 pb-1 pt-3">
+            <div className="p-4">
               {section.imageBlock.title && (
-                <h3 className="text-base font-semibold text-slate-900 dark:text-white">{section.imageBlock.title}</h3>
+                <h3 className="text-sm font-semibold" style={{ color: t.text }}>
+                  {section.imageBlock.title}
+                </h3>
               )}
               {section.imageBlock.description && (
-                <p className="mt-1 text-slate-600 dark:text-slate-300">{section.imageBlock.description}</p>
+                <p className="mt-1 text-sm" style={{ color: t.textMuted }}>
+                  {section.imageBlock.description}
+                </p>
               )}
             </div>
           )}
@@ -90,197 +127,322 @@ function SectionBlock({ section }: { section: ProjectSection }) {
       )}
       {section.content && (
         <div className="space-y-3">
-          {section.content.map((card, i) => <ContentCard key={i} card={card} />)}
+          {section.content.map((card, i) => <ContentCard key={i} card={card} t={t} />)}
         </div>
       )}
-    </>
+    </div>
   );
 }
 
-function VideoCard({ video, index }: { video: ProjectVideo; index: number }) {
-  const normalizeEmbedHtml = (html: string): string => {
-    // Force embeds (e.g., LinkedIn) to fill the same card box as YouTube.
-    const sized = html
+function VideoBlock({ video, index }: { video: ProjectVideo; index: number }) {
+  const normalizeEmbedHtml = (html: string) =>
+    html
       .replace(/width="[^"]*"/i, 'width="100%"')
-      .replace(/height="[^"]*"/i, 'height="100%"');
-
-    return sized.replace('<iframe ', '<iframe style="width:100%;height:100%;border:0;" ');
-  };
+      .replace(/height="[^"]*"/i, 'height="100%"')
+      .replace('<iframe ', '<iframe style="width:100%;height:100%;border:0;" ');
 
   if (video.type === 'youtube' && video.youtubeId) {
     return (
-      <div className="h-[360px] w-full overflow-hidden rounded-xl md:h-[420px]">
+      <div className="overflow-hidden rounded-2xl" style={{ aspectRatio: '16/9' }}>
         <iframe
-          width="100%"
-          height="100%"
+          width="100%" height="100%"
           src={`https://www.youtube.com/embed/${video.youtubeId}`}
           title={video.title ?? `Demo ${index + 1}`}
-          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          className="h-full w-full rounded-xl"
+          style={{ display: 'block', border: 0 }}
         />
       </div>
     );
   }
-
   if (video.type === 'embed' && video.embedHtml) {
     return (
       <div
-        className="h-[360px] w-full overflow-hidden rounded-xl md:h-[420px]"
+        className="overflow-hidden rounded-2xl"
+        style={{ aspectRatio: '16/9' }}
         dangerouslySetInnerHTML={{ __html: normalizeEmbedHtml(video.embedHtml) }}
       />
     );
   }
-
   return null;
 }
 
+// ─── Main component ────────────────────────────────────────────────────────────
 export default function ProjectDetailPage({ project }: { project: ProjectDetail }) {
+  const [theme, setTheme] = useState<Theme>('dark');
+  const t = tokens(theme);
+
+  const hasVideos  = project.videos && project.videos.length > 0;
+  const hasYoutubes = project.coverYoutubes && project.coverYoutubes.length > 0;
+
+  const GlassPanel = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
+    <motion.div
+      {...fadeUp(delay)}
+      className="rounded-2xl p-6 md:p-8"
+      style={{
+        background: t.panelBg,
+        border: `1px solid ${t.panelBorder}`,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        transition: 'background 0.4s ease, border-color 0.4s ease',
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+
   return (
-    <main className={BG}>
-      {/* dot-grid overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:72px_72px]" />
+    <main
+      style={{
+        minHeight: '100vh',
+        background: t.bg,
+        paddingTop: '5rem',
+        paddingBottom: '8rem',
+        transition: 'background 0.4s ease',
+      }}
+    >
+      {/* Subtle radial glow */}
+      <div
+        className="pointer-events-none fixed inset-0"
+        style={{
+          background: `radial-gradient(ellipse 80% 50% at 50% -10%, ${t.glow} 0%, transparent 70%)`,
+          zIndex: 0,
+          transition: 'background 0.4s ease',
+        }}
+      />
 
-      <div className="relative z-10 mx-auto w-full px-4 sm:px-6 md:w-[90%] lg:w-[65%]">
+      {/* ── Content container ─────────────────────────────────────────────── */}
+      <div
+        className="relative z-10 mx-auto w-full px-6 md:px-10 lg:px-12"
+        style={{ maxWidth: '1100px' }}
+      >
 
-        {/* ── Nav header ── */}
-        <motion.div {...rowV(0)} className="mb-8 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs font-bold uppercase tracking-[0.35em]" style={{ color: ACCENT }}>
-            Projects
-          </p>
-          <div className="flex gap-2">
-            <Link href="/projects" className={NAV_PILL}>← All Projects</Link>
-            <Link href="/" className={NAV_PILL}>← Home</Link>
-          </div>
-        </motion.div>
-
-        {/* ── Title + description + tags ── */}
-        <motion.section {...rowV(0.06)} className={`mb-6 ${CARD}`}>
-          <h1 className="text-2xl font-bold leading-snug text-slate-900 dark:text-white">
+        {/* ── Hero: title + subtitle + tags ── */}
+        <motion.div {...fadeUp(0.05)} className="mb-10">
+          {project.subtitle && (
+            <p
+              className="mb-3 text-xs font-medium uppercase tracking-widest"
+              style={{ color: t.textFaint, letterSpacing: '0.14em' }}
+            >
+              {project.subtitle}
+            </p>
+          )}
+          <h1
+            className="mb-5 font-semibold leading-tight"
+            style={{
+              color: t.text,
+              fontSize: 'clamp(1.8rem, 4vw, 3rem)',
+              letterSpacing: '-0.02em',
+              transition: 'color 0.4s ease',
+            }}
+          >
             {project.title}
           </h1>
-          {project.subtitle && (
-            <p className="mt-1 text-sm font-medium" style={{ color: ACCENT }}>{project.subtitle}</p>
-          )}
-          <p className="mt-3 text-base leading-7 text-slate-600 dark:text-slate-300">
+          <p
+            className="mb-8 leading-relaxed"
+            style={{
+              color: t.textMuted,
+              fontSize: '1rem',
+              maxWidth: '680px',
+              transition: 'color 0.4s ease',
+            }}
+          >
             {project.description}
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
             {project.tags.map(tag => (
-              <span key={tag} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              <span
+                key={tag}
+                className="rounded-full px-3 py-1 text-xs font-medium"
+                style={{
+                  background: t.tagBg,
+                  border: `1px solid ${t.tagBorder}`,
+                  color: t.tagText,
+                  letterSpacing: '0.06em',
+                  fontFamily: 'Inter, monospace',
+                  transition: 'all 0.4s ease',
+                }}
+              >
                 {tag}
               </span>
             ))}
           </div>
-        </motion.section>
+        </motion.div>
 
-        {/* ── Videos: mixed media (new) ── */}
-        {project.videos && project.videos.length > 0 && (
-          <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
-            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demos</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {project.videos.map((video, index) => (
-                <VideoCard key={`video-${index}`} video={video} index={index} />
+        {/* ── Links ── */}
+        {project.links.length > 0 && (
+          <motion.div {...fadeUp(0.1)} className="mb-10 flex flex-wrap gap-3">
+            {project.links.map(({ type, url }) => {
+              const { label, Icon } = LINK_META[type];
+              return (
+                <a
+                  key={type}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    padding: '0.5rem 1.1rem',
+                    background: t.tagBg,
+                    border: `1px solid ${t.tagBorder}`,
+                    color: t.tagText,
+                    letterSpacing: '0.08em',
+                  }}
+                >
+                  <Icon style={{ width: 13, height: 13 }} />
+                  {label}
+                </a>
+              );
+            })}
+          </motion.div>
+        )}
+
+        {/* Divider */}
+        <motion.div
+          {...fadeUp(0.13)}
+          className="mb-10"
+          style={{ height: '1px', background: t.divider, transition: 'background 0.4s ease' }}
+        />
+
+        {/* ── Media: videos (unified) ── */}
+        {hasVideos && (
+          <GlassPanel delay={0.16}>
+            <p className="mb-5 text-xs font-medium uppercase tracking-widest" style={{ color: t.textFaint, letterSpacing: '0.12em' }}>
+              Demos
+            </p>
+            <div className={project.videos!.length > 1 ? 'grid gap-4 md:grid-cols-2' : ''}>
+              {project.videos!.map((video, index) => (
+                <VideoBlock key={index} video={video} index={index} />
               ))}
             </div>
-          </motion.section>
+          </GlassPanel>
         )}
 
-        {/* ── Cover: LinkedIn embed (legacy single embed) ── */}
-        {(!project.videos || project.videos.length === 0) && project.coverEmbed && (
-          <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
-            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demo</h2>
+        {/* ── Media: legacy coverEmbed ── */}
+        {!hasVideos && project.coverEmbed && (
+          <GlassPanel delay={0.16}>
+            <p className="mb-5 text-xs font-medium uppercase tracking-widest" style={{ color: t.textFaint, letterSpacing: '0.12em' }}>Demo</p>
             <div
-              className="flex justify-center overflow-hidden rounded-xl"
+              className="overflow-hidden rounded-xl"
+              style={{ aspectRatio: '16/9' }}
               dangerouslySetInnerHTML={{ __html: project.coverEmbed }}
             />
-          </motion.section>
+          </GlassPanel>
         )}
 
-        {/* ── Cover: YouTube ── */}
-        {(!project.videos || project.videos.length === 0) && !project.coverEmbed && project.coverYoutubes && project.coverYoutubes.length > 0 && (
-          <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
-            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demos</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {project.coverYoutubes.map((youtubeId, index) => (
-                <div key={`${youtubeId}-${index}`} className="overflow-hidden rounded-xl">
+        {/* ── Media: legacy coverYoutubes ── */}
+        {!hasVideos && !project.coverEmbed && hasYoutubes && (
+          <GlassPanel delay={0.16}>
+            <p className="mb-5 text-xs font-medium uppercase tracking-widest" style={{ color: t.textFaint, letterSpacing: '0.12em' }}>Demos</p>
+            <div className={project.coverYoutubes!.length > 1 ? 'grid gap-4 md:grid-cols-2' : ''}>
+              {project.coverYoutubes!.map((youtubeId, index) => (
+                <div key={`${youtubeId}-${index}`} className="overflow-hidden rounded-xl" style={{ aspectRatio: '16/9' }}>
                   <iframe
-                    width="100%"
-                    height="300"
+                    width="100%" height="100%"
                     src={`https://www.youtube.com/embed/${youtubeId}`}
                     title={`Demo ${index + 1}`}
-                    frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
-                    className="rounded-xl"
+                    style={{ display: 'block', border: 0 }}
                   />
                 </div>
               ))}
             </div>
-          </motion.section>
+          </GlassPanel>
         )}
 
-        {/* ── Cover: YouTube (legacy single video) ── */}
-        {(!project.videos || project.videos.length === 0) && !project.coverEmbed && (!project.coverYoutubes || project.coverYoutubes.length === 0) && project.coverYoutube && (
-          <motion.section {...rowV(0.12)} className={`mb-6 ${CARD}`}>
-            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🎥 Demo</h2>
-            <div className="overflow-hidden rounded-xl">
+        {/* ── Media: legacy single coverYoutube ── */}
+        {!hasVideos && !project.coverEmbed && !hasYoutubes && project.coverYoutube && (
+          <GlassPanel delay={0.16}>
+            <p className="mb-5 text-xs font-medium uppercase tracking-widest" style={{ color: t.textFaint, letterSpacing: '0.12em' }}>Demo</p>
+            <div className="overflow-hidden rounded-xl" style={{ aspectRatio: '16/9' }}>
               <iframe
-                width="100%"
-                height="480"
+                width="100%" height="100%"
                 src={`https://www.youtube.com/embed/${project.coverYoutube}`}
                 title="Demo"
-                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
-                className="rounded-xl"
+                style={{ display: 'block', border: 0 }}
               />
             </div>
-          </motion.section>
+          </GlassPanel>
         )}
 
-        {/* ── Cover: image ── */}
-        {(!project.videos || project.videos.length === 0) && !project.coverEmbed && (!project.coverYoutubes || project.coverYoutubes.length === 0) && !project.coverYoutube && project.coverImage && (
-          <motion.section {...rowV(0.12)} className="mb-6 overflow-hidden rounded-[2rem]">
-            <div className="relative h-72 w-full">
+        {/* ── Media: cover image ── */}
+        {!hasVideos && !project.coverEmbed && !hasYoutubes && !project.coverYoutube && project.coverImage && (
+          <motion.div
+            {...fadeUp(0.16)}
+            className="mb-6 overflow-hidden rounded-2xl"
+            style={{ border: `1px solid ${t.panelBorder}` }}
+          >
+            <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
               <Image src={project.coverImage} alt={project.title} fill className="object-cover" priority />
             </div>
-          </motion.section>
-        )}
-
-        {/* ── Links ── */}
-        {project.links.length > 0 && (
-          <motion.section {...rowV(0.18)} className={`mb-6 ${CARD}`}>
-            <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">🔗 Links</h2>
-            <div className="flex flex-wrap gap-3">
-              {project.links.map(({ type, url }) => {
-                const { label, color, Icon } = LINK_META[type];
-                return (
-                  <a
-                    key={type}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-2xl border border-slate-200/80 bg-slate-50/80 px-5 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-white/10 dark:bg-slate-800/60"
-                  >
-                    <Icon className="h-4 w-4" style={{ color }} />
-                    <span style={{ color }}>{label}</span>
-                  </a>
-                );
-              })}
-            </div>
-          </motion.section>
+          </motion.div>
         )}
 
         {/* ── Dynamic sections ── */}
-        {project.sections.map((section, i) => (
-          <motion.section key={i} {...rowV(0.24 + i * 0.06)} className={`mb-6 ${CARD}`}>
-            <SectionBlock section={section} />
-          </motion.section>
-        ))}
-
+        {project.sections.length > 0 && (
+          <div className="mt-6 space-y-4">
+            {project.sections.map((section, i) => (
+              <GlassPanel key={i} delay={0.2 + i * 0.05}>
+                <SectionBlock section={section} t={t} />
+              </GlassPanel>
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* ── Fixed bottom pill: Home + theme toggle ── */}
+      <motion.div
+        className="fixed bottom-8 left-1/2 z-50"
+        style={{ x: '-50%' } as React.CSSProperties}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div
+          className="flex items-center gap-1 rounded-full px-2 py-2"
+          style={{
+            background: t.navBg,
+            border: `1px solid ${t.navBorder}`,
+            backdropFilter: 'blur(32px)',
+            WebkitBackdropFilter: 'blur(32px)',
+            transition: 'all 0.4s ease',
+          }}
+        >
+          {/* Home button */}
+          <Link
+            href="/"
+            className="relative rounded-full px-5 py-2 text-xs font-medium uppercase tracking-wider transition-colors duration-300"
+            style={{ color: t.navPillText, background: t.navPillBg, letterSpacing: '0.08em' }}
+          >
+            Home
+          </Link>
+
+          {/* Theme toggle */}
+          <button
+            onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+            className="rounded-full p-2 transition-all duration-300 hover:scale-110"
+            style={{ color: t.navText }}
+            aria-label="Toggle theme"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={theme}
+                initial={{ opacity: 0, rotate: -30, scale: 0.7 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 30, scale: 0.7 }}
+                transition={{ duration: 0.25 }}
+              >
+                {theme === 'dark' ? <FiSun size={15} /> : <FiMoon size={15} />}
+              </motion.div>
+            </AnimatePresence>
+          </button>
+        </div>
+      </motion.div>
     </main>
   );
 }

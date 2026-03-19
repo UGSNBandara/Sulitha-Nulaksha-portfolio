@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Raleway, Inter } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/Providers'
 
+const raleway = Raleway({ subsets: ['latin'], variable: '--font-raleway' })
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -23,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="h-full">
-      <body className={`${inter.className} min-h-full w-full bg-white dark:bg-dark text-gray-900 dark:text-white transition-colors duration-300`}>
+    <html lang="en" suppressHydrationWarning className="h-full scroll-smooth">
+      <body className={`${raleway.className} ${inter.className} min-h-full w-full`} style={{ backgroundColor: 'var(--color-void)', color: 'var(--color-cream)' }}>
         <Providers>
           {children}
         </Providers>
