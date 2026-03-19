@@ -21,8 +21,8 @@ const CONTACT_LINKS = [
   {
     icon: FaLinkedin,
     label: 'LinkedIn',
-    value: '/in/sulitha-nulaksha',
-    url: 'https://www.linkedin.com/in/sulitha-nulaksha/',
+    value: '/in/nulaksha-bandara',
+    url: 'https://www.linkedin.com/in/nulaksha-bandara/',
   },
   {
     icon: FaGithub,

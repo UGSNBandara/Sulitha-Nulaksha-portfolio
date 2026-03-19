@@ -6,7 +6,7 @@ import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
 import { SiWhatsapp } from 'react-icons/si';
 
 const HERO_LINKS = [
-  { icon: FaLinkedin, url: 'https://www.linkedin.com/in/sulitha-nulaksha/', label: 'LinkedIn' },
+  { icon: FaLinkedin, url: 'https://www.linkedin.com/in/nulaksha-bandara', label: 'LinkedIn' },
   { icon: FaGithub,   url: 'https://github.com/SulithaNulaksha',            label: 'GitHub' },
   { icon: FaEnvelope, url: 'mailto:sulithanb119@gmail.com',                  label: 'Email' },
   { icon: SiWhatsapp, url: 'https://wa.me/94714262972',                      label: 'WhatsApp' },
