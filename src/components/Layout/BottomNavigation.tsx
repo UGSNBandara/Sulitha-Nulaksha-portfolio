@@ -2,18 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiHome, FiUser, FiFolder, FiBriefcase, FiMail } from 'react-icons/fi';
 
 interface NavItem {
   id: string;
   label: string;
+  Icon: React.ComponentType<{ size?: number }>;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'hero', label: 'Home' },
-  { id: 'about', label: 'About' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'hero',       label: 'Home',       Icon: FiHome      },
+  { id: 'about',      label: 'About',      Icon: FiUser      },
+  { id: 'projects',   label: 'Projects',   Icon: FiFolder    },
+  { id: 'experience', label: 'Experience', Icon: FiBriefcase },
+  { id: 'contact',    label: 'Contact',    Icon: FiMail      },
 ];
 
 const CREAM_SECTIONS = new Set(['about', 'experience']);
@@ -22,17 +24,22 @@ export const BottomNavigation: React.FC = () => {
   const [activeSection, setActiveSection] = useState('hero');
   const [isScrolling, setIsScrolling] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Delay appearance on load
     const timer = setTimeout(() => setIsVisible(true), 800);
-    return () => clearTimeout(timer);
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       if (isScrolling) return;
-
       const sections = NAV_ITEMS.map(item => {
         const el = document.getElementById(item.id);
         return el ? { id: item.id, el } : null;
@@ -41,9 +48,7 @@ export const BottomNavigation: React.FC = () => {
       let current = 'hero';
       for (const section of sections) {
         const rect = section.el.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * 0.5) {
-          current = section.id;
-        }
+        if (rect.top <= window.innerHeight * 0.5) current = section.id;
       }
       setActiveSection(current);
     };
@@ -66,7 +71,7 @@ export const BottomNavigation: React.FC = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed bottom-8 left-1/2 z-50"
+          className="fixed bottom-6 left-1/2 z-50"
           style={{ x: '-50%' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -77,31 +82,50 @@ export const BottomNavigation: React.FC = () => {
             const onCream = CREAM_SECTIONS.has(activeSection);
             return (
               <div className={`${onCream ? 'glass-on-cream' : 'glass'} shadow-glass rounded-full px-2 py-2`}>
-                <nav className="flex items-center gap-1">
+                <nav className="flex items-center gap-0.5 sm:gap-1">
                   {NAV_ITEMS.map((item) => {
                     const isActive = activeSection === item.id;
+                    const activeColor = onCream ? 'var(--color-cream)' : 'var(--color-void)';
+                    const inactiveColor = onCream ? 'rgba(33,35,37,0.45)' : 'rgba(243,240,236,0.5)';
+                    const pillBg = onCream ? 'var(--color-charcoal)' : 'var(--color-cream)';
+
                     return (
                       <button
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
-                        className="relative px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition-colors duration-300"
+                        className="relative rounded-full transition-colors duration-300 flex items-center justify-center gap-1.5"
                         style={{
-                          color: isActive
-                            ? (onCream ? 'var(--color-cream)' : 'var(--color-void)')
-                            : (onCream ? 'rgba(33,35,37,0.45)' : 'rgba(243,240,236,0.5)'),
-                          letterSpacing: '0.08em',
+                          color: isActive ? activeColor : inactiveColor,
+                          padding: isMobile ? '0.5rem 0.65rem' : '0.45rem 1rem',
                         }}
+                        aria-label={item.label}
                         aria-current={isActive ? 'page' : undefined}
                       >
                         {isActive && (
                           <motion.div
                             layoutId="nav-pill"
                             className="absolute inset-0 rounded-full"
-                            style={{ backgroundColor: onCream ? 'var(--color-charcoal)' : 'var(--color-cream)' }}
+                            style={{ backgroundColor: pillBg }}
                             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                           />
                         )}
-                        <span className="relative z-10">{item.label}</span>
+                        {/* Mobile: icon only — Desktop: icon + label */}
+                        <span className="relative z-10 flex items-center gap-1.5">
+                          <item.Icon size={isMobile ? 16 : 13} />
+                          {!isMobile && (
+                            <span
+                              style={{
+                                fontSize: '0.68rem',
+                                fontWeight: 500,
+                                letterSpacing: '0.08em',
+                                textTransform: 'uppercase',
+                                fontFamily: 'Inter, monospace',
+                              }}
+                            >
+                              {item.label}
+                            </span>
+                          )}
+                        </span>
                       </button>
                     );
                   })}

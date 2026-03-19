@@ -3,14 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
-import { SiHuggingface, SiWhatsapp } from 'react-icons/si';
+import { SiWhatsapp } from 'react-icons/si';
 
 const HERO_LINKS = [
-  { icon: FaLinkedin,    url: 'https://www.linkedin.com/in/sulitha-nulaksha/', label: 'LinkedIn' },
-  { icon: FaGithub,      url: 'https://github.com/SulithaNulaksha',            label: 'GitHub' },
-  { icon: SiHuggingface, url: 'https://huggingface.co/sulitha-nulaksha',       label: 'Hugging Face' },
-  { icon: FaEnvelope,    url: 'mailto:sulitha.nulaksha@gmail.com',             label: 'Email' },
-  { icon: SiWhatsapp,    url: 'https://wa.me/94702405535',                     label: 'WhatsApp' },
+  { icon: FaLinkedin, url: 'https://www.linkedin.com/in/sulitha-nulaksha/', label: 'LinkedIn' },
+  { icon: FaGithub,   url: 'https://github.com/SulithaNulaksha',            label: 'GitHub' },
+  { icon: FaEnvelope, url: 'mailto:sulithanb119@gmail.com',                  label: 'Email' },
+  { icon: SiWhatsapp, url: 'https://wa.me/94714262972',                      label: 'WhatsApp' },
 ];
 
 const FADE_UP = {
@@ -112,7 +111,7 @@ export const HeroSection: React.FC = () => {
             onMouseEnter={e => (e.currentTarget.style.color = 'rgba(243,240,236,1)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'rgba(243,240,236,0.4)')}
           >
-            <Icon size={28} />
+            <Icon size={36} />
           </a>
         ))}
       </motion.div>

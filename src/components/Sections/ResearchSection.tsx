@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 const RESEARCH_ITEMS = [
@@ -23,6 +23,14 @@ const RESEARCH_ITEMS = [
 
 export const ResearchSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -49,6 +57,45 @@ export const ResearchSection: React.FC = () => {
 
   // Heading fades in with cards
   const headingOpacity = useTransform(smoothProgress, [0.28, 0.42, 0.58, 0.72], [0, 1, 1, 0]);
+
+  const cardContent = RESEARCH_ITEMS.map((item) => (
+    <div
+      key={item.label}
+      style={{
+        background: 'rgba(243,240,236,0.04)',
+        border: '1px solid rgba(243,240,236,0.08)',
+        borderRadius: '12px',
+        padding: '1.25rem',
+      }}
+    >
+      <span style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.15em', color: 'rgba(243,240,236,0.2)', fontFamily: 'Inter, monospace', display: 'block', marginBottom: '0.6rem' }}>
+        {item.label}
+      </span>
+      <h3 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-cream)', marginBottom: '0.5rem', letterSpacing: '-0.01em' }}>
+        {item.title}
+      </h3>
+      <p style={{ fontSize: '0.8rem', color: 'rgba(243,240,236,0.45)', lineHeight: 1.6 }}>
+        {item.desc}
+      </p>
+    </div>
+  ));
+
+  // Mobile: simple static section, no scroll animation
+  if (isMobile) {
+    return (
+      <div style={{ background: 'var(--color-void)', padding: '4rem 1.5rem' }}>
+        <p style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(243,240,236,0.3)', fontFamily: 'Inter, monospace', marginBottom: '1rem' }}>
+          Research Directions
+        </p>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 5vw, 2rem)', fontWeight: 600, color: 'var(--color-cream)', letterSpacing: '-0.02em', marginBottom: '2rem', lineHeight: 1.2 }}>
+          What I&apos;m working on.
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {cardContent}
+        </div>
+      </div>
+    );
+  }
 
   return (
     // Tall outer div gives the scroll distance for the animation to play through
@@ -158,51 +205,7 @@ export const ResearchSection: React.FC = () => {
               gap: '1rem',
             }}
           >
-            {RESEARCH_ITEMS.map((item) => (
-              <div
-                key={item.label}
-                style={{
-                  background: 'rgba(243,240,236,0.04)',
-                  border: '1px solid rgba(243,240,236,0.08)',
-                  borderRadius: '12px',
-                  padding: '1.25rem',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '0.6rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.15em',
-                    color: 'rgba(243,240,236,0.2)',
-                    fontFamily: 'Inter, monospace',
-                    display: 'block',
-                    marginBottom: '0.6rem',
-                  }}
-                >
-                  {item.label}
-                </span>
-                <h3
-                  style={{
-                    fontSize: '0.9rem',
-                    fontWeight: 600,
-                    color: 'var(--color-cream)',
-                    marginBottom: '0.5rem',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {item.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: '0.8rem',
-                    color: 'rgba(243,240,236,0.45)',
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {item.desc}
-                </p>
-              </div>
-            ))}
+            {cardContent}
           </motion.div>
         </motion.div>
       </div>

@@ -9,14 +9,14 @@ const CONTACT_LINKS = [
   {
     icon: FaEnvelope,
     label: 'Email',
-    value: 'sulitha.nulaksha@gmail.com',
-    url: 'mailto:sulitha.nulaksha@gmail.com',
+    value: 'sulithanb119@gmail.com',
+    url: 'mailto:sulithanb119@gmail.com',
   },
   {
     icon: SiWhatsapp,
     label: 'WhatsApp',
-    value: '+94 70 240 5535',
-    url: 'https://wa.me/94702405535',
+    value: '+94 71 426 2972',
+    url: 'https://wa.me/94714262972',
   },
   {
     icon: FaLinkedin,
@@ -63,7 +63,7 @@ export const ContactSection: React.FC = () => {
           </p>
 
           <div className="flex gap-4 mt-10 flex-wrap">
-            <a href="mailto:sulitha.nulaksha@gmail.com" className="btn-cream">
+            <a href="mailto:sulithanb119@gmail.com" className="btn-cream">
               Send a Message
             </a>
             <a
