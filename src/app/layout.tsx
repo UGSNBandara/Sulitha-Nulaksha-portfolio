@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Raleway, Inter } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/Providers'
+import { ChatWidget } from '@/components/Chat/ChatWidget'
 
 const raleway = Raleway({ subsets: ['latin'], variable: '--font-raleway' })
 const inter = Inter({ subsets: ['latin'] })
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={`${raleway.className} ${inter.className} min-h-full w-full`} style={{ backgroundColor: 'var(--color-void)', color: 'var(--color-cream)' }}>
         <Providers>
           {children}
+          <ChatWidget />
         </Providers>
       </body>
     </html>
