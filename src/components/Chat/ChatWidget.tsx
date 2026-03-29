@@ -31,6 +31,7 @@ export const ChatWidget: React.FC = () => {
       style={{
         width: `${avatarSize}px`,
         height: `${avatarSize}px`,
+        backgroundColor: 'var(--color-cream)',
         border: '1px solid rgba(243,240,236,0.18)',
       }}
     >
@@ -284,6 +285,7 @@ export const ChatWidget: React.FC = () => {
           style={{
             width: isMobile ? '36px' : '44px',
             height: isMobile ? '36px' : '44px',
+            backgroundColor: 'var(--color-cream)',
             border: '1px solid rgba(243,240,236,0.15)',
           }}
         >
@@ -309,7 +311,7 @@ export const ChatWidget: React.FC = () => {
                 overflow: 'hidden',
               }}
             >
-              Talk with me
+              Talk with My Digital Twin
             </motion.span>
           )}
           {open && !isMobile && (
